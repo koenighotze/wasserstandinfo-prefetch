@@ -1,0 +1,46 @@
+{
+  "name": "wasserstandinfo-prefetch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "David Schmitz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/koenighotze/wasserstandinfo-prefetch/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:koenighotze/wasserstandinfo-prefetch.git"
+  },
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "clean": "/bin/rm -fr build/tmp/* build/*zip",
+    "lint": "node_modules/jshint/bin/jshint src/ test/",
+    "test": "lab -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
+    "package": "pushd build/tmp && cp -rf ../../package.json ../../src/* . && npm i --production && zip -r -1 ../skill.zip * && popd",
+    "update": "aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip",
+    "publish": "aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip --publish",
+    "invoke": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
+    "logs": "awslogs get /aws/lambda/wasserstandinfoPrefetch --aws-region eu-west-1",
+    "create.bucket": "aws s3 mb s3://dschmitz.wasserstandinfo",
+    "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandinfo"
+  },
+  "dependencies": {
+    "alexa-sdk": "^1.0.15",
+    "aws-sdk": "^2.177.0",
+    "wreck": "^12.2.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-string": "^1.3.0",
+    "chai-things": "^0.2.0",
+    "claudia": "^2.14.2",
+    "jshint": "^2.9.5",
+    "lab": "^13.0.2",
+    "mocha": "^3.3.0",
+    "request": "^2.81.0",
+    "sinon": "^2.1.0"
+  }
+}
