@@ -11,7 +11,6 @@ const storeStationData = function (stationdata) {
     }
 
     console.log('Storing output in ', s3params.Bucket)
-
     s3.putObject(s3params, (err, data) => {
       if (err) {
         reject(err)
