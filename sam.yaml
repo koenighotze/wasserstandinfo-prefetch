@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Hello World for Devcon
+Resources:
+  HelloDevcon:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 5
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: .
