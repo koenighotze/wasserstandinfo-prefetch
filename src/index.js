@@ -10,7 +10,9 @@ exports.handler = (event, context, callback) => {
     }
     else {
       console.log('Storing stations to S3')
-      StationData.storeStationData(StationData.parseStationData(stations)).then((result) => callback(null, result)).catch((err) => callback(err))
+      StationData.storeStationData(StationData.parseStationData(stations))
+        .then((result) => callback(null, result))
+        .catch((err) => callback(err))
     }
   })
 }
