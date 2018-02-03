@@ -38,7 +38,6 @@ lab.experiment('storeStationData the station data', () => {
     done()
   })
 
-
   test('should store the data in the right bucket', () => {
     putObjectStub = sandbox.stub(s3, 'putObject').callsFake((params, callback) => {
       expect(params.Bucket).to.be.eql('dschmitz.wasserstandsinfo')

@@ -16,14 +16,3 @@ const fetchStations = function (callback) {
 module.exports = {
   fetchStations
 }
-
-if (process.env.NODE_ENV === 'development') {
-  fetchStations((err, events) => {
-    if (err) {
-      console.warn(err)
-    }
-    else {
-      console.log(events)
-    }
-  })
-}
