@@ -16,7 +16,6 @@ const storeStationData = function (stationdata) {
         reject(err)
       }
       else {
-        console.log('Upload success')
         resolve(data)
       }
     })
