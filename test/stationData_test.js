@@ -68,7 +68,14 @@ lab.experiment('storeStationData the station data', () => {
   })
   
   test('should reject if the bucket name is unset', (done) => {
-    done()
+    delete process.env.UPLOAD_BUCKET_NAME
+
+    StationData.storeStationData(stations).catch(err => {
+      expect(err).to.be.not.null
+      expect(err.message).to.contain('UPLOAD_BUCKET_NAME')
+
+      done()
+    })
   })
 
   test('should tag the s3 bucket', () => {

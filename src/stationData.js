@@ -1,10 +1,17 @@
 const aws = require('aws-sdk')
 const s3 = new aws.S3({ apiVersion: '2006-03-01' })
 
+
 const storeStationData = function (stationdata) {
   const promise = new Promise( (resolve, reject) => {
+    const bucketName = process.env.UPLOAD_BUCKET_NAME
+
+    if (!bucketName) {
+      reject(new Error('Bucket name UPLOAD_BUCKET_NAME is not set!'))
+    }
+
     const s3params = {
-      Bucket: process.env.UPLOAD_BUCKET_NAME,
+      Bucket: bucketName,
       Key: 'stations.json',
       Body: JSON.stringify(stationdata),
       Tagging: 'CostCenter=TECCO&Owner=dschmitz'
