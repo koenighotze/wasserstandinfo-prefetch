@@ -19,13 +19,15 @@
     "clean": "/bin/rm -fr build/tmp/* build/*zip",
     "lint": "./node_modules/eslint/bin/eslint.js --fix src/** test/**",
     "test": "lab -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
-    "package": "pushd build/tmp && cp -rf ../../package.json ../../src/* . && npm i --production && zip -r -1 ../skill.zip * && popd",
-    "update": "aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip",
+    "package": "npm clean && npm test && npm lint && pushd build/tmp && cp -rf ../../package.json ../../src/* . && npm i --production && zip -r -1 ../skill.zip * && popd",
+    "update": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip",
     "publish": "aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip --publish",
-    "invoke": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
+    "invoke.remote": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
     "logs": "awslogs get /aws/lambda/wasserstandinfoPrefetch --aws-region eu-west-1",
-    "create.bucket": "aws s3 mb s3://dschmitz.wasserstandinfo",
-    "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandinfo"
+    "create.bucket": "aws s3 mb s3://dschmitz.wasserstandsinfo",
+    "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandsinfo",
+    "configure.bucket.name": "aws lambda update-function-configuration --function-name wasserstandinfoPrefetch --environment 'Variables={UPLOAD_BUCKET_NAME=\"dschmitz.wasserstandsinfo\"}' --region eu-west-1",
+    "start": "ntl"
   },
   "dependencies": {
     "alexa-sdk": "^1.0.15",
@@ -38,6 +40,7 @@
     "claudia": "^2.14.2",
     "eslint": "^4.16.0",
     "lab": "^13.1.0",
+    "ntl": "^1.2.0",
     "proxyquire": "^1.8.0",
     "request": "^2.81.0",
     "sinon": "^2.4.1"
