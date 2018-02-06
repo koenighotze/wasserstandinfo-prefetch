@@ -4,13 +4,13 @@ const s3 = new aws.S3({ apiVersion: '2006-03-01' })
 const storeStationData = function (stationdata) {
   const promise = new Promise( (resolve, reject) => {
     const s3params = {
-      Bucket: 'dschmitz.wasserstandsinfo',
+      Bucket: process.env.UPLOAD_BUCKET_NAME,
       Key: 'stations.json',
       Body: JSON.stringify(stationdata),
       Tagging: 'CostCenter=TECCO&Owner=dschmitz'
     }
 
-    console.log('Storing output in ', s3params.Bucket)
+    console.log('Storing output in', s3params.Bucket)
     s3.putObject(s3params, (err, data) => {
       if (err) {
         reject(err)

@@ -19,6 +19,7 @@ lab.experiment('parsing the station data', () => {
 })
 
 lab.experiment('storeStationData the station data', () => {
+  const testBucketName = 'TESTBUCKET'
   const stations = [{'uuid':'47174d8f-1b8e-4599-8a59-b580dd55bc87','name':'EITZE','water':'ALLER'}]
   const sandbox = sinon.sandbox.create()
   const proxyquire = require('proxyquire')
@@ -33,14 +34,21 @@ lab.experiment('storeStationData the station data', () => {
 
   var putObjectStub
 
+  lab.beforeEach( (done) => {
+    process.env.UPLOAD_BUCKET_NAME = testBucketName 
+
+    done()
+  })
+
   lab.afterEach( (done) => {
+    delete process.env.UPLOAD_BUCKET_NAME
     putObjectStub.restore()
+
     done()
   })
 
   test('should store the data in the right bucket', () => {
     putObjectStub = sandbox.stub(s3, 'putObject').callsFake((params, callback) => {
-      expect(params.Bucket).to.be.eql('dschmitz.wasserstandsinfo')
       expect(params.Key).to.be.eql('stations.json')
 
       callback(null, 'ok')
@@ -48,7 +56,21 @@ lab.experiment('storeStationData the station data', () => {
 
     return StationData.storeStationData(stations)
   })
+
+  test('should use the bucket name from the environment', () => {
+    putObjectStub = sandbox.stub(s3, 'putObject').callsFake((params, callback) => {
+      expect(params.Bucket).to.be.eql(testBucketName)
+
+      callback(null, 'ok')
+    })
+
+    return StationData.storeStationData(stations)
+  })
   
+  test('should reject if the bucket name is unset', (done) => {
+    done()
+  })
+
   test('should tag the s3 bucket', () => {
     putObjectStub = sandbox.stub(s3, 'putObject').callsFake((params, callback) => {
       expect(params.Tagging).to.be.contain('CostCenter=TECCO')
