@@ -66,7 +66,8 @@ lab.experiment('the function', () => {
     sandbox.stub(PegelOnline, 'fetchStations')
       .callsArgWith(0, null, rawStations)
 
-    const error = new Error('boom')  
+    const error = new Error('boom') 
+    
     const fake = (_) => {
       return Promise.reject(error)
     }

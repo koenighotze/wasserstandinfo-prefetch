@@ -19,28 +19,27 @@
     "clean": "/bin/rm -fr build/tmp/* build/*zip",
     "lint": "./node_modules/eslint/bin/eslint.js --fix src/** test/**",
     "test": "lab -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
-    
-    "package": "npm clean && npm test && npm lint && pushd build/tmp && cp -rf ../../package.json ../../src/* . && npm i --production && zip -r -1 ../skill.zip * && popd",
-    
-    "update": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip",
-    "publish": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip --publish",
-    
+
+    "package": "npm run clean && npm test && npm run lint && npm pack && tar -C build/tmp/ -xvzf wasserstandinfo-prefetch-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
+    "update": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/lambda.zip",
+    "publish": "(git diff-index --quiet HEAD -- || echo 'Cannot publish dirty repo! Please stash or commit your changes\n\n' && exit 1) && npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/lambda.zip --publish",
+
     "invoke.remote": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
     "logs": "awslogs get /aws/lambda/wasserstandinfoPrefetch --aws-region eu-west-1",
 
     "create.bucket": "aws s3 mb s3://dschmitz.wasserstandsinfo",
     "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandsinfo",
-    "configure.bucket.name": "aws lambda update-function-configuration --function-name wasserstandinfoPrefetch --environment 'Variables={UPLOAD_BUCKET_NAME=\"dschmitz.wasserstandsinfo\"}' --region eu-west-1",
+    "lambda.set.bucket.name": "aws lambda update-function-configuration --function-name wasserstandinfoPrefetch --environment 'Variables={UPLOAD_BUCKET_NAME=\"dschmitz.wasserstandsinfo\"}' --region eu-west-1",
+
+    "lambda.describe": "aws lambda get-function --function-name wasserstandinfoPrefetch --region eu-west-1",
+    "lambda.get.arn": "npm run lambda.describe | jq  -r '.Configuration.FunctionArn'",
 
     "start": "ntl"
   },
   "dependencies": {
-    "alexa-sdk": "^1.0.15",
-    "aws-sdk": "^2.177.0",
     "wreck": "^12.2.0"
   },
   "devDependencies": {
-    "aws-sdk-mock": "^1.7.0",
     "chai": "^4.1.2",
     "claudia": "^2.14.2",
     "eslint": "^4.16.0",

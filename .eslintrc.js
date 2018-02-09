@@ -21,6 +21,13 @@ module.exports = {
             "error",
             "never"
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "no-unused-vars": [
+            "error", 
+            { 
+                "varsIgnorePattern": "_",
+                "argsIgnorePattern": "^_" 
+            }
+        ]
     }
 };

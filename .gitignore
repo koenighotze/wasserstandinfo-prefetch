@@ -10,3 +10,4 @@ build/
 *.zip
 npm-debug.log
 out.json
+*.tgz
