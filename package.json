@@ -19,14 +19,19 @@
     "clean": "/bin/rm -fr build/tmp/* build/*zip",
     "lint": "./node_modules/eslint/bin/eslint.js --fix src/** test/**",
     "test": "lab -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
+    
     "package": "npm clean && npm test && npm lint && pushd build/tmp && cp -rf ../../package.json ../../src/* . && npm i --production && zip -r -1 ../skill.zip * && popd",
+    
     "update": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip",
-    "publish": "aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip --publish",
+    "publish": "npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/skill.zip --publish",
+    
     "invoke.remote": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
     "logs": "awslogs get /aws/lambda/wasserstandinfoPrefetch --aws-region eu-west-1",
+
     "create.bucket": "aws s3 mb s3://dschmitz.wasserstandsinfo",
     "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandsinfo",
     "configure.bucket.name": "aws lambda update-function-configuration --function-name wasserstandinfoPrefetch --environment 'Variables={UPLOAD_BUCKET_NAME=\"dschmitz.wasserstandsinfo\"}' --region eu-west-1",
+
     "start": "ntl"
   },
   "dependencies": {
