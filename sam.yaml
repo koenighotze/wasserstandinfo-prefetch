@@ -51,7 +51,7 @@ Resources:
       Timeout: 5
       Runtime: nodejs6.10
       Handler: index.handler
-      CodeUri: .
+      CodeUri: ./build/lambda.zip
       Role: !GetAtt WasserstandInfoPrefetchRole.Arn
       Description: !Sub "Prefetch lambda for fetching stations data and uploading it to S3://${UploadBucketName}"
       Events:
