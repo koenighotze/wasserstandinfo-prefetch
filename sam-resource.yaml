@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Resources for prefetch lambda
+
+Parameters:
+    UploadBucketName:
+        Type: String
+        Default: dschmitz.wasserstandsinfo
+
+Resources:
+  WasserstandInfoPrefetchUploadBucket:
+    Type: "AWS::S3::Bucket"
+    Properties: 
+      AccessControl: "Private"
+      BucketName: !Ref UploadBucketName
+      Tags:
+        - 
+          Key: "CostCenter"
+          Value: "Tecco"
+        - 
+          Key: "Owner"
+          Value: "dschmitz"

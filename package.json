@@ -25,7 +25,7 @@
     "publish": "(git diff-index --quiet HEAD -- || echo 'Cannot publish dirty repo! Please stash or commit your changes\n\n' && exit 1) && npm run package && aws lambda update-function-code --function-name wasserstandinfoPrefetch --region eu-west-1 --zip-file fileb://build/lambda.zip --publish",
 
     "invoke.remote": "aws lambda invoke --function-name wasserstandinfoPrefetch --region eu-west-1 out.json",
-    "logs": "awslogs get /aws/lambda/wasserstandinfoPrefetch --aws-region eu-west-1",
+    "logs": "awslogs get /aws/lambda/wasserstandinfo-prefetch-WasserstandInfoPrefetch-SOYLFP1SU1LF --aws-region eu-west-1",
 
     "create.bucket": "aws s3 mb s3://dschmitz.wasserstandsinfo",
     "delete.bucket": "aws s3 rb s3://dschmitz.wasserstandsinfo",
@@ -34,7 +34,17 @@
     "lambda.describe": "aws lambda get-function --function-name wasserstandinfoPrefetch --region eu-west-1",
     "lambda.get.arn": "npm run lambda.describe | jq  -r '.Configuration.FunctionArn'",
 
-    "start": "ntl"
+    "start": "ntl",
+
+    "cf.package.resource": "aws cloudformation package --template-file sam-resource.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-resource-deploy.yaml",
+    "cf.deploy.resource": "npm run cf.package.resource && aws cloudformation deploy --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources",
+    "cf.delete.resource": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-resources",
+
+    "sam.invoke.lambda": "",
+
+    "cf.package.lambda": "aws cloudformation package --template-file sam.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-deploy.yaml",
+    "cf.deploy.lambda": "npm run cf.package.lambda && aws cloudformation deploy --template-file ./build/sam-deploy.yaml --stack-name wasserstandinfo-prefetch --capabilities CAPABILITY_NAMED_IAM",
+    "cf.delete.lambda": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch"
   },
   "dependencies": {
     "wreck": "^12.2.0"

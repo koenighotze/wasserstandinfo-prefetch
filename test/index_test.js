@@ -1,7 +1,7 @@
 const Lab = require('lab')
 const lab = exports.lab = Lab.script()
 const test = lab.test
-const handler = require('../src/index').handler
+const handler = require('../index').handler
 const sinon = require('sinon')
 const expect = require('chai').expect
 

@@ -1,12 +1,64 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
-Description: Hello World for Devcon
+Description: Prefetch function for station data
+
+Parameters:
+    UploadBucketName:
+        Type: String
+        Default: dschmitz.wasserstandsinfo
+
+Globals:
+  Function:
+    Tags:
+      CostCenter: Tecco
+      Owner: dschmitz
+
 Resources:
-  HelloDevcon:
+  WasserstandInfoPrefetchRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "WasserstandInfoPrefetchRole"  
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies: 
+        - 
+          PolicyName: WasserstandInfoPrefetchS3Upload
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectVersionAcl
+                  - s3:PutObjectTagging
+                  - s3:PutObjectAcl
+                Resource: !Sub arn:aws:s3:::${UploadBucketName}/*
+
+  WasserstandInfoPrefetch:
     Type: AWS::Serverless::Function
     Properties:
       Timeout: 5
       Runtime: nodejs6.10
       Handler: index.handler
       CodeUri: .
+      Role: !GetAtt WasserstandInfoPrefetchRole.Arn
+      Description: !Sub "Prefetch lambda for fetching stations data and uploading it to S3://${UploadBucketName}"
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+      Environment:
+        Variables:
+          UPLOAD_BUCKET_NAME: !Ref UploadBucketName

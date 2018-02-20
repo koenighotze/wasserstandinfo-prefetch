@@ -1,7 +1,10 @@
-const PegelOnline = require('./pegelOnline')
-const StationData = require('./stationData')
+const PegelOnline = require('./src/pegelOnline')
+const StationData = require('./src/stationData')
+const Util = require('util')
 
 exports.handler = (event, context, callback) => {
+  console.log('Received ', Util.inspect(event))
+
   console.log('Updating local station data')
   PegelOnline.fetchStations( (err, stations) => {
     if (err) {
