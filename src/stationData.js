@@ -1,6 +1,6 @@
-const aws = require('aws-sdk')
+const AWSXRay = require('aws-xray-sdk-core')
+const aws = AWSXRay.captureAWS(require('aws-sdk'))
 const s3 = new aws.S3({ apiVersion: '2006-03-01' })
-
 
 const storeStationData = function (stationdata) {
   const promise = new Promise( (resolve, reject) => {
