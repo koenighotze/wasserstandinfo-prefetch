@@ -44,16 +44,32 @@ Resources:
                   - s3:PutObjectTagging
                   - s3:PutObjectAcl
                 Resource: !Sub arn:aws:s3:::${UploadBucketName}/*
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Sid": "Stmt1519846476902",
+#       "Action": [
+#         "xray:PutTelemetryRecords",
+#         "xray:PutTraceSegments"
+#       ],
+#       "Effect": "Allow",
+#       "Resource": "*"
+#     }
+#   ]
+# }
 
   WasserstandInfoPrefetch:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: WasserstandInfoPrefetch
       Timeout: 5
       Runtime: nodejs6.10
       Handler: index.handler
       CodeUri: ./build/lambda.zip
       Role: !GetAtt WasserstandInfoPrefetchRole.Arn
       Description: !Sub "Prefetch lambda for fetching stations data and uploading it to S3://${UploadBucketName}"
+      Tracing: Active
       Events:
         Timer:
           Type: Schedule
