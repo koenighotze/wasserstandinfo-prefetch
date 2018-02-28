@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Load test for lambdas
+
+# Parameters:
+#     UploadBucketName:
+#         Type: String
+#         Default: dschmitz.wasserstandsinfo
+
+Globals:
+  Function:
+    Tags:
+      CostCenter: Tecco
+      Owner: dschmitz
+
+Resources:
+  LambdaLoadTestRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "LambdaLoadTestRole"  
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies: 
+        - 
+          PolicyName: InvokeAllLambdas
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action:
+                  - lambda:InvokeFunction
+                Resource: "*"
+
+  LambdaLoadTest:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: LambdaLoadTest
+      Timeout: 3
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ./build/lambda.zip
+      Role: !GetAtt LambdaLoadTestRole.Arn
+      Description: "Load test support lambda"

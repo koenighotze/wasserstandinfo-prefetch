@@ -1,0 +1,40 @@
+{
+  "name": "lambda-load-test",
+  "version": "1.0.0",
+  "description": "Lambda for load-testing other lambdas",
+  "main": "index.js",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "clean": "/bin/rm -fr build/tmp/* build/*zip",
+    "lint": "./node_modules/eslint/bin/eslint.js --fix src/ test/",
+    "test": "lab --ignore lambdaContainerId -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
+    "package": "npm run clean && npm run lint && npm pack && tar -C build/tmp/ -xvzf lambda-load-test-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
+    "invoke.remote": "aws lambda invoke --function-name LambdaLoadTest --region eu-central-1 --payload file://test/testevent.json out.txt",
+    "logs": "awslogs get /aws/lambda/LambdaLoadTest --aws-region eu-central-1",
+    "lambda.describe": "aws lambda get-function --function-name LambdaLoadTest --region eu-central-1",
+    "lambda.get.arn": "npm run lambda.describe | jq  -r '.Configuration.FunctionArn'",
+    "start": "ntl",
+    "cf.package.lambda": "npm run package && aws cloudformation package --template-file sam.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-deploy.yaml",
+    "cf.deploy.lambda": "aws cloudformation deploy --template-file ./build/sam-deploy.yaml --stack-name lambda-load-test --capabilities CAPABILITY_NAMED_IAM",
+    "cf.delete.lambda": "aws cloudformation delete-stack --stack-name lambda-load-test"
+  },
+  "keywords": [
+    "lambda"
+  ],
+  "author": "David Schmitz",
+  "license": "MIT",
+  "dependencies": {
+    "joi": "^13.1.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.203.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.18.1",
+    "lab": "^15.3.0",
+    "ntl": "^1.2.0",
+    "proxyquire": "^1.8.0",
+    "sinon": "^4.4.2"
+  }
+}
