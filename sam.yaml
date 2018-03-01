@@ -46,7 +46,7 @@ Resources:
                   - s3:PutObjectVersionAcl
                   - s3:PutObjectTagging
                   - s3:PutObjectAcl
-                Resource: !Sub arn:aws:s3:::${UploadBucketName}-${Stage}/*
+                Resource: !Sub arn:aws:s3:::${UploadBucketName}/*
         - 
           PolicyName: !Sub "WasserstandInfoPrefetchXRay-${Stage}"
           PolicyDocument: 
