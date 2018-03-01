@@ -6,7 +6,10 @@ Description: Prefetch function for station data
 Parameters:
     UploadBucketName:
         Type: String
-        Default: dschmitz.wasserstandsinfo
+        Default: dschmitz.wasserstandsinfo.dev
+    Stage:
+        Type: String
+        Default: DEV
 
 Globals:
   Function:
@@ -18,7 +21,7 @@ Resources:
   WasserstandInfoPrefetchRole:
     Type: "AWS::IAM::Role"
     Properties:
-      RoleName: "WasserstandInfoPrefetchRole"  
+      RoleName: !Sub "WasserstandInfoPrefetchRole-${Stage}"  
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -32,7 +35,7 @@ Resources:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies: 
         - 
-          PolicyName: WasserstandInfoPrefetchS3Upload
+          PolicyName: !Sub "WasserstandInfoPrefetchS3Upload-${Stage}"
           PolicyDocument: 
             Version: "2012-10-17"
             Statement: 
@@ -43,26 +46,23 @@ Resources:
                   - s3:PutObjectVersionAcl
                   - s3:PutObjectTagging
                   - s3:PutObjectAcl
-                Resource: !Sub arn:aws:s3:::${UploadBucketName}/*
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Sid": "Stmt1519846476902",
-#       "Action": [
-#         "xray:PutTelemetryRecords",
-#         "xray:PutTraceSegments"
-#       ],
-#       "Effect": "Allow",
-#       "Resource": "*"
-#     }
-#   ]
-# }
+                Resource: !Sub arn:aws:s3:::${UploadBucketName}-${Stage}/*
+        - 
+          PolicyName: !Sub "WasserstandInfoPrefetchXRay-${Stage}"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action:
+                  - xray:PutTelemetryRecords
+                  - xray:PutTraceSegments
+                Resource: "*"
 
   WasserstandInfoPrefetch:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: WasserstandInfoPrefetch
+      FunctionName: !Sub WasserstandInfoPrefetch-${Stage}
       Timeout: 5
       Runtime: nodejs6.10
       Handler: index.handler

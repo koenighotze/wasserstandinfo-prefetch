@@ -27,12 +27,20 @@
     "start": "ntl",
 
     "cf.package.resource": "aws cloudformation package --template-file sam-resource.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-resource-deploy.yaml",
-    "cf.deploy.resource": "npm run cf.package.resource && aws cloudformation deploy --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources",
-    "cf.delete.resource": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-resources",
+    "cf.deploy.DEV.resource": "npm run cf.package.resource && aws cloudformation deploy --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources-dev",
+    "cf.deploy.PROD.resource": "npm run cf.package.resource && aws cloudformation deploy --parameter-overrides Stage=PROD,UploadBucketName=dschmitz.wasserstandsinfo --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources-prod",
+    "cf.delete.DEV.resource": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-resources-dev",
+    "cf.delete.PROD.resource": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-resources-prod",
+    "cf.describe.DEV.resource": "aws cloudformation describe-stack-events --stack-name wasserstandinfo-prefetch-resources-dev",
+    "cf.describe.PROD.resource": "aws cloudformation describe-stack-events --stack-name wasserstandinfo-prefetch-resources-prod",
 
     "cf.package.lambda": "npm run package && aws cloudformation package --template-file sam.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-deploy.yaml",
-    "cf.deploy.lambda": "npm run cf.package.lambda && aws cloudformation deploy --template-file ./build/sam-deploy.yaml --stack-name wasserstandinfo-prefetch --capabilities CAPABILITY_NAMED_IAM",
-    "cf.delete.lambda": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch"
+    "cf.deploy.DEV.lambda": "aws cloudformation deploy --template-file ./build/sam-deploy.yaml --stack-name wasserstandinfo-prefetch-dev --capabilities CAPABILITY_NAMED_IAM",
+    "cf.deploy.PROD.lambda": "aws cloudformation deploy --template-file ./build/sam-deploy.yaml --stack-name wasserstandinfo-prefetch-prod --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Stage=PROD UploadBucketName=dschmitz.wasserstandsinfo",
+    "cf.delete.DEV.lambda": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-dev",
+    "cf.delete.PROD.lambda": "aws cloudformation delete-stack --stack-name wasserstandinfo-prefetch-prod",
+    "cf.describe.DEV.lambda": "aws cloudformation describe-stack-events --stack-name wasserstandinfo-prefetch-dev",
+    "cf.describe.PROD.lambda": "aws cloudformation describe-stack-events --stack-name wasserstandinfo-prefetch-prod"
   },
   "dependencies": {
     "aws-sdk": "^2.203.0",
