@@ -1,7 +1,6 @@
 {
   "name": "wasserstandinfo-prefetch",
   "version": "1.0.0",
-  "description": "todo",
   "main": "index.js",
   "author": "David Schmitz",
   "license": "MIT",
@@ -17,8 +16,9 @@
   ],
   "scripts": {
     "clean": "/bin/rm -fr build/tmp/* build/*zip",
-    "lint": "./node_modules/eslint/bin/eslint.js --fix src/ test/",
-    "test": "lab -l --ignore lambdaContainerId -r console -o stdout -r html -o build/report/coverage.html -r lcov -o build/report/lcov.info",
+    "lint": "eslint src/",
+    "lint-fix": "eslint --fix src/",
+    "test": "jest --verbose --coverage",
     "package": "npm run clean && npm test && npm run lint && npm pack && tar -C build/tmp/ -xvzf wasserstandinfo-prefetch-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
     "invoke.DEV.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-DEV --region eu-central-1 out.json",
     "invoke.PROD.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-PROD --region eu-central-1 out.json",
@@ -44,19 +44,18 @@
   },
   "dependencies": {
     "aws-sdk": "^2.203.0",
-    "aws-xray-sdk": "^1.2.0",
-    "uuid4": "^1.0.0",
-    "wreck": "^12.5.1"
+    "axios": "^0.21.1",
+    "bunyan": "^1.8.15",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "claudia": "^2.14.2",
-    "eslint": "^4.16.0",
-    "lab": "^13.1.0",
+    "@types/jest": "^26.0.21",
+    "@types/node": "^14.14.35",
+    "@types/uuid": "^8.3.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-jest": "^24.3.2",
+    "jest": "^26.6.3",
     "ntl": "^1.2.0",
-    "proxyquire": "^1.8.0",
-    "request": "^2.81.0",
-    "sinon": "^2.4.1",
     "snyk": "^1.96.0"
   }
 }
