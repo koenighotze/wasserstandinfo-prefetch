@@ -1,16 +1,13 @@
-const Wreck = require('wreck')
+const axios = require('axios').default
+const logger = require('bunyan').createLogger({ name: __filename })
 
-const fetchStations = function (callback) {
+const fetchStations = async () => {
   const url = 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/'
-  console.log('Fetching stations from ' + url)
-  Wreck.get(url, { timeout: 2000 })
-    .then( (res) => {
-      callback(null, JSON.parse(res.payload))
-    })
-    .catch((error) => {
-      console.log('Fetching failed with', error)
-      callback(error)
-    })
+  logger.debug('Fetching stations from ' + url)
+
+  const { data } = await axios.get(url, { timeout: 2000 })
+
+  return data
 }
 
 module.exports = {
