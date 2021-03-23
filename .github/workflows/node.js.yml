@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]        
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Load dependencies
+      run: npm ci
+
+    - name: Run unit tests
+      run: npm test
+
+#     - name: Upload report to codacy
+#       uses: codacy/codacy-coverage-reporter-action@master
+#       with:
+#         project-token: ${{ secrets.CODACY_API_TOKEN }}
+#         coverage-reports: coverage/lcov.info
+#       continue-on-error: true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Load dependencies
+      run: npm ci
+
+    - name: Lint source code
+      run: npm run lint
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Scan for vulnerabilities
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  build:
+    needs:
+      - unit-test
+      - lint
+      - security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build the lambda
+        run: echo "This will build the lambda"
+
+    
+      
