@@ -13,3 +13,6 @@ out.json
 *.tgz
 output.log
 out.txt
+coverage
+load
+build
