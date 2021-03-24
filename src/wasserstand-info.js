@@ -1,6 +1,6 @@
 const logger = require('bunyan').createLogger({ name: __filename })
-const PegelOnline = require('./pegelOnline')
-const StationData = require('./stationData')
+const PegelOnline = require('./pegel-online')
+const StationData = require('./station-data')
 
 const fetchCurrentWasserstand = async (uploadBucketName) => {
     logger.info('Updating local station data')

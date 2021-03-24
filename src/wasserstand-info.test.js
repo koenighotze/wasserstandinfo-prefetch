@@ -6,10 +6,10 @@ describe('the wasserstand info', () => {
         mockStoreStationData = jest.fn()
         mockParseStationData = jest.fn()
 
-        jest.mock('./pegelOnline', () => ({
+        jest.mock('./pegel-online', () => ({
             fetchStations: mockFetchStations
         }))
-        jest.mock('./stationData', () => ({
+        jest.mock('./station-data', () => ({
             storeStationData: mockStoreStationData,
             parseStationData: mockParseStationData
         }))
