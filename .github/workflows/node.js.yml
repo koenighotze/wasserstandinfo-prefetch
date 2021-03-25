@@ -45,6 +45,13 @@ jobs:
     - name: Lint source code
       run: npm run lint
 
+    - name: Lint markdown
+      uses: reviewdog/action-remark-lint@v2.0.0
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          fail_on_error: true
+
   security-scan:
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +64,6 @@ jobs:
       with:
         tfsec_actions_comment: true
         tfsec_actions_working_dir: provision/
-        # tfsec_version: v0.37.0
 
     - name: Scan for vulnerabilities
       uses: snyk/actions/node@master
