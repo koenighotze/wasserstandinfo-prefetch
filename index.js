@@ -4,7 +4,7 @@ logger.info('Setting up fresh instance', global.lambdaContainerId)
 
 const fetchCurrentWasserstand = require('./src/wasserstand-info')
 
-exports.handler = async (event, context) => {
+exports.handler = async () => {
   logger.debug('Running as function', global.lambdaContainerId)
 
   return await fetchCurrentWasserstand(process.env.UPLOAD_BUCKET_NAME)
