@@ -1,0 +1,5 @@
+*.test.js
+**/test-fixtures/**
+coverage/
+build/
+node_modules/

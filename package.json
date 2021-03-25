@@ -11,22 +11,19 @@
     "type": "git",
     "url": "git@github.com:koenighotze/wasserstandinfo-prefetch.git"
   },
-  "files": [
-    "src/*"
-  ],
   "scripts": {
     "clean": "/bin/rm -fr build/tmp/* build/*zip",
     "lint": "eslint src/",
     "lint-fix": "eslint --fix src/",
     "test": "jest --verbose --coverage",
-    "package": "npm run clean && npm test && npm run lint && npm pack && tar -C build/tmp/ -xvzf wasserstandinfo-prefetch-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
-    "invoke.DEV.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-DEV --region eu-central-1 out.json",
-    "invoke.PROD.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-PROD --region eu-central-1 out.json",
-    "logs.DEV": "awslogs get /aws/lambda/WasserstandInfoPrefetch-DEV --aws-region eu-central-1",
-    "logs.PROD": "awslogs get /aws/lambda/WasserstandInfoPrefetch-PROD --aws-region eu-central-1",
-    "lambda.describe": "aws lambda get-function --function-name wasserstandinfoPrefetch --region eu-central-1",
-    "lambda.get.arn": "npm run lambda.describe | jq  -r '.Configuration.FunctionArn'",
+    "package": "npm run clean && npm test && npm run lint && npm pack && mkdir build/tmp && tar -C build/tmp/ -xvzf wasserstandinfo-prefetch-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
     "start": "ntl",
+    "invoke.DEV.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-DEV --region eu-center-1 out.json",
+    "invoke.PROD.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-PROD --region eu-center-1 out.json",
+    "logs.DEV": "awslogs get /aws/lambda/WasserstandInfoPrefetch-DEV --aws-region eu-center-1",
+    "logs.PROD": "awslogs get /aws/lambda/WasserstandInfoPrefetch-PROD --aws-region eu-center-1",
+    "lambda.describe": "aws lambda get-function --function-name wasserstandinfoPrefetch --region eu-center-1",
+    "lambda.get.arn": "npm run lambda.describe | jq  -r '.Configuration.FunctionArn'",
     "cf.package.resource": "aws cloudformation package --template-file sam-resource.yaml --s3-bucket dschmitz.cloudformation.test --output-template-file ./build/sam-resource-deploy.yaml",
     "cf.deploy.DEV.resource": "npm run cf.package.resource && aws cloudformation deploy --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources-dev",
     "cf.deploy.PROD.resource": "npm run cf.package.resource && aws cloudformation deploy --parameter-overrides Stage=PROD,UploadBucketName=dschmitz.wasserstandsinfo --template-file ./build/sam-resource-deploy.yaml --stack-name wasserstandinfo-prefetch-resources-prod",
@@ -49,6 +46,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@aws-sdk/client-lambda": "^3.9.0",
     "@types/jest": "^26.0.21",
     "@types/node": "^14.14.35",
     "@types/uuid": "^8.3.0",

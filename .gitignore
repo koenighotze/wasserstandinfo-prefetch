@@ -16,3 +16,7 @@ out.txt
 coverage
 load
 build
+tmp
+*tgz
+.terraform.lock.hcl
+.terraform

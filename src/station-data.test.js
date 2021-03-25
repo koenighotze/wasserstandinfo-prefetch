@@ -5,7 +5,7 @@ const { any, objectContaining } = expect
 
 describe('parsing the station data', () => {
   it('should extract uuid, station name and the water name', async () => {
-    const parsed = require('./stationData').parseStationData(rawStations)
+    const parsed = require('./station-data').parseStationData(rawStations)
 
     expect(parsed).toHaveLength(rawStations.length)
     expect(parsed[0]).toMatchObject({
@@ -31,7 +31,7 @@ describe('storeStationData the station data', () => {
         })
       }
     }))
-    StationData = require('./stationData')
+    StationData = require('./station-data')
   })
 
   it('should store the data in the right bucket', async () => {

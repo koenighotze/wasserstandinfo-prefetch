@@ -11,7 +11,7 @@ describe('fetching the stations', () => {
         get: mockGet
       }
     }))
-    fetchStations = require('./pegelOnline').fetchStations
+    fetchStations = require('./pegel-online').fetchStations
   })
 
   it('should return the payload as json', async () => {
