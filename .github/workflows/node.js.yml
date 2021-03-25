@@ -14,7 +14,8 @@ jobs:
       matrix:
         node-version: [14.x]        
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -37,19 +38,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Load dependencies
       run: npm ci
 
     - name: Lint source code
       run: npm run lint
-
-    - name: Run tflint with reviewdog
-      uses: reviewdog/action-tflint@v1.1.1
-      with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
 
     - name: Lint markdown
       uses: reviewdog/action-remark-lint@v2.0.0
@@ -67,7 +63,8 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: detect-secrets
       uses: reviewdog/action-detect-secrets@master
@@ -79,13 +76,6 @@ jobs:
       uses: snyk/actions/node@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-    - name: Run tfsec with reviewdog
-      uses: reviewdog/action-tfsec@v1.6.1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: github-pr-review
-        fail_on_error: true
 
   build:
     needs:
