@@ -45,17 +45,38 @@ jobs:
     - name: Lint source code
       run: npm run lint
 
+    - name: Run tflint with reviewdog
+      uses: reviewdog/action-tflint@v1.1.1
+      with:
+          github_token: ${{ secrets.github_token }}
+          fail_on_error: true
+          reporter: github-pr-review
+
     - name: Lint markdown
       uses: reviewdog/action-remark-lint@v2.0.0
       with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-check
+          reporter: github-pr-review
           fail_on_error: true
+          annotate: true
+
+    - name: shellcheck
+      uses: reviewdog/action-shellcheck@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        pattern: "*.sh" 
 
   security-scan:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+
+    - name: detect-secrets
+      uses: reviewdog/action-detect-secrets@master
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
 
     - name: Check Terraform code
       uses: triat/terraform-security-scan@v2.0.2
@@ -69,6 +90,13 @@ jobs:
       uses: snyk/actions/node@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    # - name: Run tfsec with reviewdog
+    #   uses: reviewdog/action-tfsec@v1.0.0
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     reporter: github-pr-review
+    #     fail_on_error: true
 
   build:
     needs:
