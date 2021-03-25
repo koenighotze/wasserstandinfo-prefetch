@@ -12,10 +12,3 @@
 *   Export the output code-bucket value as BUCKET_NAME
 *   Upload code using ./scripts/bundle.sh
 *   Run ./provision/function
-
-
-
-Some extra
-* Markdown violations
-
-# such as this
