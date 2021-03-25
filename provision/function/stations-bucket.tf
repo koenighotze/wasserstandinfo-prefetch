@@ -1,4 +1,5 @@
-#tfsec:ignore:AWS002 tfsec:ignore:AWS017
+#tfsec:ignore:AWS002 
+#tfsec:ignore:AWS017
 resource "aws_s3_bucket" "stations" {
   bucket = local.s3_stations_bucket_name
   acl    = "private"
