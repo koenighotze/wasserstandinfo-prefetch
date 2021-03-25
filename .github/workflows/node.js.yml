@@ -49,7 +49,6 @@ jobs:
       uses: reviewdog/action-tflint@v1.1.1
       with:
           github_token: ${{ secrets.github_token }}
-          fail_on_error: true
           reporter: github-pr-review
 
     - name: Lint markdown
@@ -57,8 +56,6 @@ jobs:
       with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
-          fail_on_error: true
-          annotate: true
 
     - name: shellcheck
       uses: reviewdog/action-shellcheck@v1
@@ -78,25 +75,25 @@ jobs:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
 
-    - name: Check Terraform code
-      uses: triat/terraform-security-scan@v2.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tfsec_actions_comment: true
-        tfsec_actions_working_dir: provision/
+    # - name: Check Terraform code
+    #   uses: triat/terraform-security-scan@v2.0.2
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tfsec_actions_comment: true
+    #     tfsec_actions_working_dir: provision/
 
     - name: Scan for vulnerabilities
       uses: snyk/actions/node@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-    # - name: Run tfsec with reviewdog
-    #   uses: reviewdog/action-tfsec@v1.0.0
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     reporter: github-pr-review
-    #     fail_on_error: true
+    - name: Run tfsec with reviewdog
+      uses: reviewdog/action-tfsec@v1.0.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        fail_on_error: true
 
   build:
     needs:
