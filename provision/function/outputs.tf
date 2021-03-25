@@ -1,9 +1,5 @@
-output "code_bucket_arn" {
-  value = aws_s3_bucket.code.arn
-}
-
-output "stations_bucket_arn" {
-  value = aws_s3_bucket.stations.arn
+output "stations_bucket" {
+  value = aws_s3_bucket.stations.bucket
 }
 
 output "policy_arn" {

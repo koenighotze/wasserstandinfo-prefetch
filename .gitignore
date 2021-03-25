@@ -18,3 +18,5 @@ load
 build
 tmp
 *tgz
+.terraform.lock.hcl
+.terraform

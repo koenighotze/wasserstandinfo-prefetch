@@ -50,6 +50,16 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
+    - name: Check Terraform code
+      uses: triat/terraform-security-scan@v2.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tfsec_actions_comment: true
+        tfsec_actions_working_dir: provision/
+        tfsec_version: v0.37.0
+        tfsec_output_format: default
+
     - name: Scan for vulnerabilities
       uses: snyk/actions/node@master
       env:
