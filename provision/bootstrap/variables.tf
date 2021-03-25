@@ -10,7 +10,7 @@ locals {
   env_name = "dev" #lower(terraform.workspace)
 
   common_tags = {
-    Owner = "dschmitz"
+    Owner       = "dschmitz"
     Environment = local.env_name
   }
 

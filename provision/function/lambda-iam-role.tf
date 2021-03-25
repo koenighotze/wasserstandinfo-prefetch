@@ -10,11 +10,11 @@ data "aws_iam_policy_document" "lambda_exec" {
 }
 
 resource "aws_iam_policy" "allow_access_to_stations" {
-   name = "allow-access-to-stations-role"
+  name = "allow-access-to-stations-role"
 
-   policy = templatefile("allow-access-to-stations-policy.json", {
-     resource_arn = "${aws_s3_bucket.stations.arn}/*"
-   })
+  policy = templatefile("allow-access-to-stations-policy.json", {
+    resource_arn = "${aws_s3_bucket.stations.arn}/*"
+  })
 }
 
 resource "aws_iam_role" "lambda" {
