@@ -14,7 +14,7 @@ temp_dir=$(mktemp -d)
 cp -rvf src index.js package.json package-lock.json "$temp_dir" 
 pushd "$temp_dir"
 npm ci --production -q
-zip -r -1 ../code.zip *
+zip -r -1 ../code.zip ./*
 popd
 
 aws s3 cp code.zip "s3://${BUCKET_NAME}/${APP_VERSION}/"
