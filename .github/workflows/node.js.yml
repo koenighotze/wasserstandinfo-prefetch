@@ -91,12 +91,12 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-    - name: Run tfsec with reviewdog
-      uses: reviewdog/action-tfsec@v1.0.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: github-pr-review
-        fail_on_error: true
+    # - name: Run tfsec with reviewdog
+    #   uses: reviewdog/action-tfsec@v1.0.0
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     reporter: github-pr-review
+    #     fail_on_error: true
 
   build:
     needs:
