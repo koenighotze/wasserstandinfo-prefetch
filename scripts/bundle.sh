@@ -9,8 +9,8 @@ npm run clean
 npm test
 npm run lint
 
-temp_dir=$(mktemp -d)
-
+temp_dir="temp-build-$$"
+mkdir "$temp_dir"
 cp -rvf src index.js package.json package-lock.json "$temp_dir" 
 pushd "$temp_dir"
 npm ci --production -q
