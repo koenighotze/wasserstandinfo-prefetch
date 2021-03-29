@@ -18,6 +18,7 @@
     "markdown-lint": "npx remark-cli .",
     "markdown-lint-fix": "npx remark-cli . -o",
     "test": "jest --verbose --coverage",
+    "test.integration": "jest --verbose -c jest.config.integration-test.js | bunyan ",
     "package": "npm run clean && npm test && npm run lint && npm pack && mkdir build/tmp && tar -C build/tmp/ -xvzf wasserstandinfo-prefetch-*.tgz && pushd build/tmp/package && npm i --production && zip -r -1 ../../lambda.zip * && popd",
     "start": "ntl",
     "invoke.DEV.remote": "aws lambda invoke --function-name WasserstandInfoPrefetch-DEV --region eu-center-1 out.json",
@@ -45,10 +46,12 @@
     "aws-sdk": "^2.203.0",
     "axios": "^0.21.1",
     "bunyan": "^1.8.15",
+    "dotenv": "^8.2.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@aws-sdk/client-lambda": "^3.9.0",
+    "@aws-sdk/client-s3": "^3.9.0",
     "@types/jest": "^26.0.21",
     "@types/node": "^14.14.35",
     "@types/uuid": "^8.3.0",

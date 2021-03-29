@@ -20,3 +20,5 @@ tmp
 *tgz
 .terraform.lock.hcl
 .terraform
+temp-build-*
+.env
