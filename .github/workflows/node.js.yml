@@ -71,7 +71,7 @@ jobs:
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
-        detect_secrets_flags: --exclude-files 'package-lock.json'
+        detect_secrets_flags: "--exclude-lines '.*\"integrity\": \"sha1-.*$'"
 
     - name: Scan for vulnerabilities
       uses: snyk/actions/node@master
