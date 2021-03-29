@@ -19,7 +19,8 @@ describe('the handler', () => {
 
     expect(mockFetcher).toHaveBeenCalledWith('testbucket', 'teststations.json')
   })
-
+//  "integrity": "sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=",
+// quick check if detect secret works
   describe('and fetching the wasserstand failed', () => {
     it('should reject', async () => {
       const error = new Error('bumm')
