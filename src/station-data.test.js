@@ -1,6 +1,4 @@
 const { stations: rawStations } = require('./test-fixtures/raw_stations')
-
-
 const { any, objectContaining } = expect
 
 describe('parsing the station data', () => {
@@ -16,6 +14,7 @@ describe('parsing the station data', () => {
 
 describe('storeStationData the station data', () => {
   const testBucketName = 'TESTBUCKET'
+  const testStationsObjectKeyName = 'teststations.json'
   const stations = [{'uuid':'47174d8f-1b8e-4599-8a59-b580dd55bc87','name':'EITZE','water':'ALLER'}]
 
   let mockPutObject, mockPutObjectPromise, StationData
@@ -35,11 +34,11 @@ describe('storeStationData the station data', () => {
   })
 
   it('should store the data in the right bucket', async () => {
-    await StationData.storeStationData(stations, testBucketName)
+    await StationData.storeStationData(stations, testBucketName, testStationsObjectKeyName)
 
     expect(mockPutObject).toHaveBeenCalledWith(objectContaining({
       Bucket: testBucketName,
-      Key: 'stations.json',
+      Key: testStationsObjectKeyName,
       Body: JSON.stringify(stations),
       Tagging: any(String)
     }))
@@ -53,6 +52,6 @@ describe('storeStationData the station data', () => {
     const error = new Error('bumm')
     mockPutObjectPromise.mockRejectedValue(error)
     
-    await expect(StationData.storeStationData(stations, testBucketName)).rejects.toThrowError(error)
+    await expect(StationData.storeStationData(stations, testBucketName, testStationsObjectKeyName)).rejects.toThrowError(error)
   })
 })

@@ -6,14 +6,18 @@ describe('the handler', () => {
 
     handler = require('../index').handler
     process.env.UPLOAD_BUCKET_NAME = 'testbucket'
+    process.env.STATIONS_OBJECT_KEY_NAME = 'teststations.json'
   })
 
-  afterEach(() => delete process.env.UPLOAD_BUCKET_NAME)
+  afterEach(() => {
+    delete process.env.UPLOAD_BUCKET_NAME
+    delete process.env.STATIONS_OBJECT_KEY_NAME
+  })
 
   it('should call the wasserstand info', async () => {
     await handler()
 
-    expect(mockFetcher).toHaveBeenCalledWith('testbucket')
+    expect(mockFetcher).toHaveBeenCalledWith('testbucket', 'teststations.json')
   })
 
   describe('and fetching the wasserstand failed', () => {
