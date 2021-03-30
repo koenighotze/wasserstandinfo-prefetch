@@ -101,7 +101,6 @@ jobs:
       with:
         name: Bootstrap plan
         path: provision/bootstrap/bootstrap.tfplan
-        if-no-files-found: error
 
     - name: Apply
       run: terraform apply bootstrap.tfplan
