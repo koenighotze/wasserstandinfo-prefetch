@@ -30,10 +30,14 @@ jobs:
         fail_on_error: true
 
   plan:
+    # if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+      TF_LOG: INFO
+      TF_INPUT: false
+      TF_IN_AUTOMATION: true
     defaults:
       run: 
         working-directory: provision/bootstrap
@@ -51,8 +55,12 @@ jobs:
       run: terraform init
 
     - name: Plan
-      run: terraform plan -out bootstrap.tfplan
+      run: terraform plan -input=false -no-color
       
+    - name: Create plan output file
+      run: |
+        echo "${{ steps.plan.outputs.stdout }}" > bootstrap.tfplan
+
     - name: Upload plan
       uses: actions/upload-artifact@v2
       with:
