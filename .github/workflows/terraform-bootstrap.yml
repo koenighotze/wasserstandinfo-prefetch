@@ -70,6 +70,7 @@ jobs:
       run: 
         working-directory: provision/bootstrap
 
+    steps:
     - name: Init Terraform
       run: terraform init
 
