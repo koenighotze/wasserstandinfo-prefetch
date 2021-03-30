@@ -31,7 +31,9 @@ jobs:
 
   plan:
     runs-on: ubuntu-latest
-    working-directory: provision/bootstrap
+    defaults:
+      run: 
+        working-directory: provision/bootstrap
     steps:
     - name: Checkout
       uses: actions/checkout@v2
