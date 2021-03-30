@@ -103,7 +103,9 @@ jobs:
         path: provision/bootstrap/bootstrap.tfplan
 
     - name: list
-      run: ls -la
+      run: ls -la bootstrap.tfplan
 
     - name: Apply
-      run: terraform apply bootstrap.tfplan
+      run: |
+        cd working-directory: provision/bootstrap
+        terraform apply bootstrap.tfplan
