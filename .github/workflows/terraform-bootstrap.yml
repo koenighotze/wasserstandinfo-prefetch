@@ -1,7 +1,8 @@
 name: Terraform bootstrap
 
 on:
-  branches: [ master ]
+  push: 
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
