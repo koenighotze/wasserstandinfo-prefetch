@@ -49,18 +49,14 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.4
-        terraform_wrapper: true
+        terraform_wrapper: false
 
     - name: Init
       run: terraform init
 
     - name: Plan
-      run: terraform plan -input=false -no-color
+      run: terraform plan -input=false -no-color -out bootstrap.tfplan
       
-    - name: Create plan output file
-      run: |
-        echo "${{ steps.plan.outputs.stdout }}" > bootstrap.tfplan
-
     - name: Upload plan
       uses: actions/upload-artifact@v2
       with:
