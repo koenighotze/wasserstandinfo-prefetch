@@ -106,4 +106,4 @@ jobs:
       run: ls -la bootstrap.tfplan
 
     - name: Apply
-      run: terraform apply bootstrap.tfplan
+      run: TF_LOG=TRACE terraform apply bootstrap.tfplan
