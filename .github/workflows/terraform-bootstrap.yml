@@ -69,7 +69,7 @@ jobs:
     #   run: terraform show
 
     - name: apply on master
-      if: {{ github.ref == 'ref/head/master' }}
+      if: github.ref == 'refs/heads/master'
       run: terraform apply bootstrap.tfplan
   # apply:
   #   runs-on: ubuntu-latest
