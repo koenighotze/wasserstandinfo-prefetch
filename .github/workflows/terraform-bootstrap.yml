@@ -99,6 +99,11 @@ jobs:
         name: Bootstrap plan
         path: provision/bootstrap/bootstrap.tfplan
 
+    - name: show
+      run: |
+        terraform show
+
+
     - name: Apply
       run: |
         ls -latR
