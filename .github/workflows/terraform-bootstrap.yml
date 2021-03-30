@@ -57,11 +57,15 @@ jobs:
     - name: Plan
       run: terraform plan -input=false -no-color -out bootstrap.tfplan
       
+    - name: Echo plan
+      run: ls -la bootstrap.tfplan
+
     - name: Upload plan
       uses: actions/upload-artifact@v2
       with:
         name: Bootstrap plan
         path: bootstrap.tfplan 
+        if-no-files-found: error
 
   apply:
     runs-on: ubuntu-latest
