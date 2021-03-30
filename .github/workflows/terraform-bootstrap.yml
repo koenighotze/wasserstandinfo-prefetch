@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Bootstrap plan
-        path: bootstrap.tfplan 
+        path: provision/bootstrap/bootstrap.tfplan 
         if-no-files-found: error
 
   apply:
