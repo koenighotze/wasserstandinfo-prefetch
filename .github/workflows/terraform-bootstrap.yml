@@ -87,6 +87,12 @@ jobs:
     - name: Init Terraform
       run: terraform init
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.4
+        terraform_wrapper: false
+
     - name: Download plan
       uses: actions/download-artifact@v2
       with:
