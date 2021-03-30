@@ -106,6 +106,4 @@ jobs:
       run: ls -la bootstrap.tfplan
 
     - name: Apply
-      run: |
-        cd provision/bootstrap
-        terraform apply bootstrap.tfplan
+      run: terraform apply bootstrap.tfplan
