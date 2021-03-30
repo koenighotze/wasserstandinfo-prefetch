@@ -107,5 +107,5 @@ jobs:
 
     - name: Apply
       run: |
-        cd working-directory: provision/bootstrap
+        cd provision/bootstrap
         terraform apply bootstrap.tfplan
