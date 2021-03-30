@@ -65,14 +65,12 @@ jobs:
     #     if-no-files-found: error
     #     retention-days: 1
 
-    - name: show
-      run: |
-        terraform show
+    # - name: show
+    #   run: terraform show
 
-    - name: Apply
-      if: github.ref == 'refs/heads/master'
-      run: |
-        terraform apply bootstrap.tfplan
+    - name: apply on master
+      if: {{ github.ref == 'ref/head/master' }}
+      run: terraform apply bootstrap.tfplan
   # apply:
   #   runs-on: ubuntu-latest
   #   needs: plan
