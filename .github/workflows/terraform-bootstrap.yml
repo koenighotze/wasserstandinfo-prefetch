@@ -88,7 +88,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.4
-        terraform_wrapper: false
+        terraform_wrapper: true
 
     - name: Init
       run: terraform init
@@ -103,8 +103,6 @@ jobs:
       run: |
         terraform show
 
-
     - name: Apply
       run: |
-        ls -latR
-        TF_LOG=TRACE terraform apply bootstrap.tfplan
+        TF_LOG=TRACE terraform apply --auto-approve
