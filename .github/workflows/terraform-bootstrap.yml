@@ -84,13 +84,16 @@ jobs:
         working-directory: provision/bootstrap
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.4
         terraform_wrapper: false
 
-    - name: Init Terraform
+    - name: Init
       run: terraform init
 
     - name: Download plan
