@@ -1,4 +1,4 @@
-name: Terraform Lint and Security Check
+name: Security scan
 
 on:
   push:
@@ -8,23 +8,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  security-scan:
+    name: Scan code for security flaws
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Terraform lint
-      uses: reviewdog/action-tflint@v1.1.1
+    - name: Detect secrets
+      uses: reviewdog/action-detect-secrets@master
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
+        detect_secrets_flags: "--exclude-files package-lock.json --exclude-lines '.*{{ secrets.AWS.*'"
+        fail_on_error: true
 
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - name: Scan for vulnerabilities with Snyk
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Scan Terraform for vulnerabilities
       uses: reviewdog/action-tfsec@v1.6.1
@@ -32,3 +34,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: github-pr-review
         fail_on_error: true
+
