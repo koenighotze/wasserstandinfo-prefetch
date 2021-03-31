@@ -9,10 +9,13 @@ on:
 
 jobs:
   unit-test:
+    name: Run application unit tests
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: [14.x]        
+        node-version: [14.x] 
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -36,6 +39,7 @@ jobs:
       continue-on-error: true
 
   lint:
+    name: Lint application code
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -60,43 +64,19 @@ jobs:
         reporter: github-pr-review
         pattern: "*.sh" 
 
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: detect-secrets
-      uses: reviewdog/action-detect-secrets@master
+    - name: Terraform lint
+      uses: reviewdog/action-tflint@v1.1.1
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
-        detect_secrets_flags: "--exclude-files package-lock.json --exclude-lines '.*{{ secrets.AWS.*'"
-        fail_on_error: true
 
-    - name: Scan for vulnerabilities
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-  build:
+  slack-workflow-status:
+    name: Post CI Workflow Status To Slack
+    runs-on: ubuntu-latest
+    if: always()
     needs:
       - unit-test
       - lint
-      - security-scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build the lambda
-        run: echo "This will build the lambda"
-    
-  slack-workflow-status:
-    runs-on: ubuntu-latest
-    if: always()
-    name: Post Workflow Status To Slack
-    needs:
-      - build
     steps:
       - name: Slack Workflow Notification
         uses: Gamesight/slack-workflow-status@v1.0.1
@@ -104,6 +84,6 @@ jobs:
           repo_token: ${{secrets.GITHUB_TOKEN}}
           slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
           channel: '#github'
-          name: 'Wasserstand Workflow'
+          name: ${{ github.workflow }}
           icon_emoji: ':poop:'
       

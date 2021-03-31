@@ -1,4 +1,4 @@
-name: Terraform bootstrap
+name: Terraform lambda code bucket bootstrap 
 
 on:
   push: 
@@ -7,6 +7,7 @@ on:
 
 jobs:
   plan-and-apply:
+    name: Plan and apply bootstrap infrastructure
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
@@ -28,12 +29,12 @@ jobs:
         terraform_version: 0.14.4
         terraform_wrapper: false
 
-    - name: Init
+    - name: Init bootstrap
       run: terraform init
 
-    - name: Plan
+    - name: Plan bootstrap
       run: terraform plan -input=false -no-color -out bootstrap.tfplan
       
-    - name: Apply on master
+    - name: Apply only on master
       if: github.ref == 'refs/heads/master'
       run: terraform apply bootstrap.tfplan
