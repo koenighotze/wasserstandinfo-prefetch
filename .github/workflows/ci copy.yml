@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  unit-test:
+    name: Run application unit tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x] 
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Load dependencies
+      run: npm ci
+
+    - name: Run unit tests
+      run: npm test
+
+    - name: Upload report to codacy
+      uses: codacy/codacy-coverage-reporter-action@master
+      with:
+        project-token: ${{ secrets.CODACY_API_TOKEN }}
+        coverage-reports: coverage/lcov.info
+      continue-on-error: true
+
+  lint:
+    name: Lint application code
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Load dependencies
+      run: npm ci
+
+    - name: Lint source code
+      run: npm run lint
+
+    - name: Lint markdown
+      uses: reviewdog/action-remark-lint@v2.0.0
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+    - name: shellcheck
+      uses: reviewdog/action-shellcheck@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        pattern: "*.sh" 
+
+    - name: Terraform lint
+      uses: reviewdog/action-tflint@v1.1.1
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+
+  bundle-and-upload:
+    name: Bundle current lambda code and upload to bucket
+    runs-on: ubuntu-latest
+    needs:
+      - unit-test
+      - lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Bundle code and dependencies
+        run: APP_VERSION=${GITHUB_SHA} ./scripts/bundle.sh
+        env:
+          # the bucket that will store the lambda code
+          # todo: the values should be configured dynamically
+          BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}         # pragma: allowlist secret
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # pragma: allowlist secret 
+          AWS_DEFAULT_REGION: eu-central-1
+
+  slack-workflow-status:
+    name: Post CI Workflow Status To Slack
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - bundle-and-upload
+    steps:
+      - name: Slack Workflow Notification
+        uses: Gamesight/slack-workflow-status@v1.0.1
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
+          channel: '#github'
+          name: ${{ github.workflow }}
+          icon_emoji: ':poop:'
+      
