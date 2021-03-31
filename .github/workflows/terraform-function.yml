@@ -19,6 +19,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Upload master bundle
+      run: APP_VERSION=master ./scripts/bundle.sh
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -27,9 +30,7 @@ jobs:
 
     - name: Init bootstrap
       run: terraform init
-
-    - name: Upload master bundle
-      run: APP_VERSION=master ./scripts/bundle.sh
+      working-directory: provision/function
 
     - name: Plan bootstrap
       working-directory: provision/function
