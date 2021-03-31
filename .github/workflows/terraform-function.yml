@@ -15,10 +15,6 @@ jobs:
       TF_IN_AUTOMATION: true
       BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
 
-    defaults:
-      run: 
-        working-directory: provision/function
-
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -36,10 +32,12 @@ jobs:
       run: APP_VERSION=master ./scripts/bundle.sh
 
     - name: Plan bootstrap
+      working-directory: provision/function
       run: |
         echo "Deploying master version"
         terraform plan -var code_bucket=${BUCKET_NAME} -var app_version=master -input=false -no-color -out function.tfplan
       
     - name: Apply only on master
+      working-directory: provision/function
       if: github.ref == 'refs/heads/master'
       run: terraform apply function.tfplan
