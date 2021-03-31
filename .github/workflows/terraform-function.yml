@@ -1,0 +1,38 @@
+name: Terraform lambda function dev-deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  plan-and-apply:
+    name: Plan and apply function infrastructure
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+      TF_INPUT: false
+      TF_IN_AUTOMATION: true
+
+    defaults:
+      run: 
+        working-directory: provision/function
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.4
+        terraform_wrapper: false
+
+    - name: Init bootstrap
+      run: terraform init
+
+    - name: Plan bootstrap
+      run: terraform plan -var app_version=${GITHUB_SHA} -input=false -no-color -out function.tfplan
+      
+    - name: Apply only on master
+      if: github.ref == 'refs/heads/master'
+      run: terraform apply function.tfplan
