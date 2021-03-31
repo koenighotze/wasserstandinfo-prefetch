@@ -32,8 +32,7 @@ jobs:
     - name: Init bootstrap
       run: terraform init
 
-    - bundle-and-upload:
-      name: Upload master bundle
+    - name: Upload master bundle
       runs-on: ubuntu-latest
       run: APP_VERSION=master ./scripts/bundle.sh
 
