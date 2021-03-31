@@ -1,4 +1,4 @@
-name: Terraform QA
+name: Terraform Lint and Security Check
 
 on:
   push:
@@ -17,8 +17,8 @@ jobs:
     - name: Terraform lint
       uses: reviewdog/action-tflint@v1.1.1
       with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
 
   security-scan:
     runs-on: ubuntu-latest

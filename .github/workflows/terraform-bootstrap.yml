@@ -1,4 +1,4 @@
-name: Terraform bootstrap
+name: Terraform lambda code bucket bootstrap 
 
 on:
   push: 
@@ -34,6 +34,6 @@ jobs:
     - name: Plan
       run: terraform plan -input=false -no-color -out bootstrap.tfplan
       
-    - name: Apply on master
+    - name: Apply only on master
       if: github.ref == 'refs/heads/master'
       run: terraform apply bootstrap.tfplan
