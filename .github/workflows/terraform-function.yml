@@ -33,7 +33,6 @@ jobs:
       run: terraform init
 
     - name: Upload master bundle
-      runs-on: ubuntu-latest
       run: APP_VERSION=master ./scripts/bundle.sh
 
     - name: Plan bootstrap
