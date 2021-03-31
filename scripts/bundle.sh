@@ -11,7 +11,7 @@ mkdir "$temp_dir"
 cp -rvf src index.js package.json package-lock.json "$temp_dir" 
 pushd "$temp_dir"
 npm ci --production -q
-zip -r -1 ../code.zip ./*
+zip -q -r -1 ../code.zip ./*
 popd
 
 echo "Uploading code in version ${APP_VERSION} to bucket ${BUCKET_NAME}"
