@@ -4,7 +4,7 @@ set -eu
 : "${BUCKET_NAME?BUCKET_NAME var missing}"
 
 APP_DEFAULT_VERSION=$(grep version package.json | cut -d: -f2 | sed 's/[", ]//g')
-: ${APP_VERSION:=$APP_DEFAULT_VERSION}
+: "${APP_VERSION:="$APP_DEFAULT_VERSION"}"
 
 temp_dir="temp-build-$$"
 mkdir "$temp_dir"
