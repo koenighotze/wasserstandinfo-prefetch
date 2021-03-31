@@ -1,5 +1,5 @@
 data "aws_s3_bucket_object" "code_hash" {
-  bucket = data.terraform_remote_state.bootstrap.outputs.code_bucket
+  bucket = var.code_bucket
   key    = "${var.app_version}/code.zip"
 }
 

@@ -1,4 +1,4 @@
-name: Terraform lambda function dev-deployment
+name: Master dev deployment
 
 on:
   workflow_dispatch:
@@ -10,8 +10,10 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+      AWS_DEFAULT_REGION: eu-central-1
       TF_INPUT: false
       TF_IN_AUTOMATION: true
+      BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
 
     defaults:
       run: 
@@ -30,10 +32,15 @@ jobs:
     - name: Init bootstrap
       run: terraform init
 
+    - bundle-and-upload:
+      name: Upload master bundle
+      runs-on: ubuntu-latest
+      run: APP_VERSION=master ./scripts/bundle.sh
+
     - name: Plan bootstrap
       run: |
-        echo "Deploying version ${GITHUB_SHA}"
-        terraform plan -var app_version="${GITHUB_SHA}" -input=false -no-color -out function.tfplan
+        echo "Deploying master version"
+        terraform plan -var code_bucket=${BUCKET_NAME} -var app_version=master -input=false -no-color -out function.tfplan
       
     - name: Apply only on master
       if: github.ref == 'refs/heads/master'
