@@ -21,7 +21,7 @@ jobs:
       run: npm ci
 
     - name: Run integration-tests
-      run:  ./node_modules/.bin/jest --verbose -c jest.config.integration-test.js |  ./node_modules/.bin/bunyan
+      run:  ./node_modules/.bin/jest --verbose -c jest.config.integration-test.js
       env:
         STATIONS_BUCKET_NAME: 'dschmitz-wasserstandinfo-stations-dev-99753'
         STATIONS_OBJECT_KEY_NAME: 'stations.json'
