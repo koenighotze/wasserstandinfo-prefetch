@@ -31,7 +31,9 @@ jobs:
       run: terraform init
 
     - name: Plan bootstrap
-      run: terraform plan -var app_version=${GITHUB_SHA} -input=false -no-color -out function.tfplan
+      run: |
+        echo "Deploying version ${GITHUB_SHA}"
+        terraform plan -var app_version="${GITHUB_SHA}" -input=false -no-color -out function.tfplan
       
     - name: Apply only on master
       if: github.ref == 'refs/heads/master'
