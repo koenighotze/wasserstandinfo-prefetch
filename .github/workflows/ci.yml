@@ -106,11 +106,10 @@ jobs:
           echo "Deploying ${APP_VERSION} version"
           terraform plan -input=false -no-color -out function.tfplan
       
-    - name: Apply on master
-      working-directory: provision/function
-      if: github.ref == 'refs/heads/master'
-      run: terraform apply function.tfplan
-
+      - name: Apply on master
+        working-directory: provision/function
+        if: github.ref == 'refs/heads/master'
+        run: terraform apply function.tfplan
 
   slack-workflow-status:
     name: Post CI Workflow Status To Slack
