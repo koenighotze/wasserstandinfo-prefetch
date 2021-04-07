@@ -82,8 +82,8 @@ jobs:
 
       - name: Bundle code and dependencies
         run: |
-          apt-get update
-          apt install -y jq
+          sudo apt-get update
+          sudo apt install -y jq
           APP_VERSION=${GITHUB_REF} ./scripts/bundle.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}         # pragma: allowlist secret
