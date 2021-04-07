@@ -17,6 +17,11 @@ resource "aws_iam_policy" "allow_access_to_stations" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "basic" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.lambda.name
+}
+
 resource "aws_iam_role" "lambda" {
   name = "wasserstandinfo-prefetch-lamdba"
 
