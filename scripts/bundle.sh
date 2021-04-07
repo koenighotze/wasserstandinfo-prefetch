@@ -8,13 +8,15 @@ pushd provision/bootstrap
 BUCKET_NAME=$(terraform show -json | jq -r '.values.outputs.code_bucket.value')
 popd
 
+CODE_FILE_NAME="code-${GITHUB_SHA}.zip"
+echo "Uploading ${CODE_FILE_NAME} in to bucket ${BUCKET_NAME}/${APP_VERSION}"
+
 temp_dir="temp-build-$$"
 mkdir "$temp_dir"
 cp -rf src index.js package.json package-lock.json "$temp_dir" 
 pushd "$temp_dir"
 npm ci --production -q
-zip -q -r -1 "../code-${GITHUB_SHA}.zip" ./*
+zip -q -r -1 "../${CODE_FILE_NAME}" ./*
 popd
 
-echo "Uploading code in version ${APP_VERSION} to bucket ${BUCKET_NAME}"
-aws s3 cp code.zip "s3://${BUCKET_NAME}/${APP_VERSION}/"
+aws s3 cp "${CODE_FILE_NAME}" "s3://${BUCKET_NAME}/${APP_VERSION}/"
