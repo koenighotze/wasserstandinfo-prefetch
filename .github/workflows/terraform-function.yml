@@ -23,7 +23,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Upload source bundle
-      run: ./scripts/bundle.sh
+      run: |
+        apt-get update
+        apt install -y jq
+        ./scripts/bundle.sh
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
