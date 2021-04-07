@@ -26,5 +26,5 @@ resource "aws_lambda_function" "wasserstandinfo_prefetch" {
     }
   }
 
-  tags = merge(local.common_tags, { CommitSha = "${var.commit_sha}" })
+  tags = merge(local.common_tags, { CommitSha = var.commit_sha })
 }
