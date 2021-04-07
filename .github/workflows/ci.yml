@@ -81,11 +81,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Bundle code and dependencies
-        run: APP_VERSION=${GITHUB_SHA} ./scripts/bundle.sh
+        run: |
+          apt-get update
+          apt install -y jq
+          APP_VERSION=${GITHUB_REF} ./scripts/bundle.sh
         env:
-          # the bucket that will store the lambda code
-          # todo: the values should be configured dynamically
-          BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}         # pragma: allowlist secret
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # pragma: allowlist secret 
           AWS_DEFAULT_REGION: eu-central-1

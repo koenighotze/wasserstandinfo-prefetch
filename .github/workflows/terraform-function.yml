@@ -31,12 +31,8 @@ jobs:
     - name: Init
       run: terraform init
       working-directory: provision/function
-    
-    - name: Upload source bundle
-      run: |
-        apt-get update
-        apt install -y jq
-        ./scripts/bundle.sh
+
+    # upload not needed as the bundle upload happens in CI workflow    
 
     - name: Plan
       working-directory: provision/function
