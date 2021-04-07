@@ -1,6 +1,8 @@
-name: Master dev deployment
+name: Dev deployment
 
 on:
+  push: 
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -13,14 +15,15 @@ jobs:
       AWS_DEFAULT_REGION: eu-central-1
       TF_INPUT: false
       TF_IN_AUTOMATION: true
-      BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
+      APP_VERSION: ${GITHUB_REF}
+      TF_VAR_app_version: ${GITHUB_REF}
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Upload master bundle
-      run: APP_VERSION=master ./scripts/bundle.sh
+    - name: Upload source bundle
+      run: ./scripts/bundle.sh
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -28,17 +31,17 @@ jobs:
         terraform_version: 0.14.4
         terraform_wrapper: false
 
-    - name: Init bootstrap
+    - name: Init
       run: terraform init
       working-directory: provision/function
 
-    - name: Plan bootstrap
+    - name: Plan
       working-directory: provision/function
       run: |
-        echo "Deploying master version"
-        terraform plan -var code_bucket=${BUCKET_NAME} -var app_version=master -input=false -no-color -out function.tfplan
+        echo "Deploying ${APP_VERSION} version"
+        terraform plan -input=false -no-color -out function.tfplan
       
-    - name: Apply only on master
+    - name: Apply
       working-directory: provision/function
       if: github.ref == 'refs/heads/master'
       run: terraform apply function.tfplan
