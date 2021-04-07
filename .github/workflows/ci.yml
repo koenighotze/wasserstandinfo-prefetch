@@ -93,7 +93,7 @@ jobs:
 
       - name: Init
         run: terraform init
-        working-directory: provision/function
+        working-directory: provision/bootstrap
 
       - name: Bundle code and dependencies
         run: |

@@ -29,8 +29,8 @@ jobs:
         terraform_wrapper: false
 
     - name: Init
-      run: terraform init
       working-directory: provision/function
+      run: terraform init
 
     # upload not needed as the bundle upload happens in CI workflow    
 
