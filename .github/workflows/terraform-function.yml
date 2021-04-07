@@ -22,12 +22,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Upload source bundle
-      run: |
-        apt-get update
-        apt install -y jq
-        ./scripts/bundle.sh
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -37,6 +31,12 @@ jobs:
     - name: Init
       run: terraform init
       working-directory: provision/function
+    
+    - name: Upload source bundle
+      run: |
+        apt-get update
+        apt install -y jq
+        ./scripts/bundle.sh
 
     - name: Plan
       working-directory: provision/function
