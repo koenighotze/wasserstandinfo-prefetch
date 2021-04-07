@@ -82,6 +82,7 @@ jobs:
       AWS_DEFAULT_REGION: eu-central-1
       APP_VERSION: ${{ github.ref }}
       TF_VAR_app_version: ${{ github.ref }}
+      TF_VAR_commit_sha: ${{ github.sha }}
 
     steps:
       - name: Checkout

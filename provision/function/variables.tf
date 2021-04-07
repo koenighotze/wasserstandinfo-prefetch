@@ -10,9 +10,8 @@ variable "app_version" {
   default = "0.0.1"
 }
 
-# variable "code_bucket" {
-#   description = "The name of the s3 bucket holding the lambda code"
-# }
+variable "commit_sha" {
+}
 
 locals {
   env_name = "dev" #lower(terraform.workspace)
