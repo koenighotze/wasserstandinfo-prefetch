@@ -22,6 +22,7 @@ resource "aws_lambda_function" "wasserstandinfo_prefetch" {
   environment {
     variables = {
       UPLOAD_BUCKET_NAME = aws_s3_bucket.stations.bucket
+      STATIONS_OBJECT_KEY_NAME = "stations.json"
     }
   }
 

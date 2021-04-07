@@ -1,0 +1,44 @@
+name: Master dev deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  plan-and-apply:
+    name: Plan and apply function infrastructure
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+      AWS_DEFAULT_REGION: eu-central-1
+      TF_INPUT: false
+      TF_IN_AUTOMATION: true
+      BUCKET_NAME: dschmitz-wasserstandinfo-lambda-dev-66939
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Upload master bundle
+      run: APP_VERSION=master ./scripts/bundle.sh
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.4
+        terraform_wrapper: false
+
+    - name: Init bootstrap
+      run: terraform init
+      working-directory: provision/function
+
+    - name: Plan bootstrap
+      working-directory: provision/function
+      run: |
+        echo "Deploying master version"
+        terraform plan -var code_bucket=${BUCKET_NAME} -var app_version=master -input=false -no-color -out function.tfplan
+      
+    - name: Apply only on master
+      working-directory: provision/function
+      if: github.ref == 'refs/heads/master'
+      run: terraform apply function.tfplan

@@ -27,9 +27,11 @@ describe('End to end', () => {
             FunctionName: LAMBDA_FUNCTION_NAME
         }))
     }
+
     const cleanUpIfNeeded = async () => {
         await assertBucketExists(s3Client)
-    
+        logger.info(`Bucket ${STATIONS_BUCKET_NAME} exists`)
+
         if (await stationsFileExists(s3Client)) {
             logger.info('Stations file exists, deleting it')
             await deleteStationsFile(s3Client)
@@ -45,14 +47,13 @@ describe('End to end', () => {
 
     afterEach(() => cleanUpIfNeeded())
 
-    
     it('should load the station data into the bucket', async () => {
-        logger.info('Check that stations file does not exist')
+        logger.info(`Check that stations file ${STATIONS_OBJECT_KEY_NAME} does not exist in bucket ${STATIONS_BUCKET_NAME}`)
         await expect(stationsFileExists()).resolves.toBeFalsy()
         
         await invokeFetchStationsLambda()
 
-        logger.info('Verify that stations file exists')
+        logger.info(`Verify that stations file ${STATIONS_OBJECT_KEY_NAME} exists in bucket ${STATIONS_BUCKET_NAME}`)
         await expect(stationsFileExists()).resolves.toBeTruthy()
     })
 })

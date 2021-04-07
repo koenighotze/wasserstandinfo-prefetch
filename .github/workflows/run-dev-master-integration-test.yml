@@ -1,0 +1,41 @@
+name: Run integration test against dev-master
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-integration-test:
+    name: Run development master integration test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: Load dependencies
+      run: npm ci
+
+    - name: Run integration-tests
+      run:  ./node_modules/.bin/jest --verbose -c jest.config.integration-test.js
+      env:
+        STATIONS_BUCKET_NAME: 'dschmitz-wasserstandinfo-stations-dev-99753'
+        STATIONS_OBJECT_KEY_NAME: 'stations.json'
+        LAMBDA_FUNCTION_NAME: 'wasserstandinfo-prefetch-dev'
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+        AWS_DEFAULT_REGION: eu-central-1
+
+    - name: Slack Workflow Notification
+      uses: Gamesight/slack-workflow-status@v1.0.1
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
+        channel: '#github'
+        name: ${{ github.workflow }}
+        icon_emoji: ':poop:'
+      
