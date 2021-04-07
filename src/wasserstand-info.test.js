@@ -29,10 +29,10 @@ describe('the wasserstand info', () => {
         mockFetchStations.mockResolvedValue(raw)
         mockParseStationData.mockReturnValue(parsed)
 
-        await fetchCurrentWasserstand('testbucketname')
+        await fetchCurrentWasserstand('testbucketname', 'stations.json')
 
         expect(mockParseStationData).toHaveBeenCalled()
-        expect(mockStoreStationData).toHaveBeenCalledWith(parsed, 'testbucketname')
+        expect(mockStoreStationData).toHaveBeenCalledWith(parsed, 'testbucketname', 'stations.json')
     })
 
     describe('and fetching the stations fails', () => {
