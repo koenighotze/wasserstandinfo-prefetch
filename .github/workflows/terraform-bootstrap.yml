@@ -1,4 +1,4 @@
-name: Terraform lambda code bucket bootstrap 
+name: Terraform lambda code bucket bootstrap
 
 on:
   push: 

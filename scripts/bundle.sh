@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -eu
 
-: "${BUCKET_NAME?BUCKET_NAME var missing}"
-
 APP_DEFAULT_VERSION=$(grep version package.json | cut -d: -f2 | sed 's/[", ]//g')
 : "${APP_VERSION:="$APP_DEFAULT_VERSION"}"
+
+pushd provision/bootstrap
+BUCKET_NAME=$(terraform show -json | jq -r '.values.outputs.code_bucket.value')
+popd
 
 temp_dir="temp-build-$$"
 mkdir "$temp_dir"
