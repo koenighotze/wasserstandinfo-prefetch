@@ -2,7 +2,7 @@ name: Run integration test against dev-master
 
 on:
   schedule:
-    - cron:  '0 10 * * *'
+    - cron:  '15 * * * *'
   workflow_dispatch:
     inputs:
       stations_bucket_name:
@@ -17,6 +17,11 @@ on:
         description: 'Name of the lambda to integrate against'
         required: true
         default: 'wasserstandinfo-prefetch-dev'
+
+env:
+  STATIONS_BUCKET_NAME: ${{ github.event.inputs.stations_bucket_name || 'dschmitz-wasserstandinfo-stations-dev-99753' }}
+  STATIONS_OBJECT_KEY_NAME: ${{ github.event.inputs.stations_object_key_name || 'stations.json' }}
+  LAMBDA_FUNCTION_NAME: ${{ github.event.inputs.lambda_function_name || 'wasserstandinfo-prefetch-dev' }}
 
 jobs:
   run-integration-test:
@@ -38,9 +43,6 @@ jobs:
     - name: Run integration-tests
       run:  ./node_modules/.bin/jest --verbose -c jest.config.integration-test.js
       env:
-        STATIONS_BUCKET_NAME: ${{ github.event.inputs.stations_bucket_name }}
-        STATIONS_OBJECT_KEY_NAME: ${{ github.event.inputs.stations_object_key_name }}
-        LAMBDA_FUNCTION_NAME: ${{ github.event.inputs.lambda_function_name }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
         AWS_DEFAULT_REGION: eu-central-1
