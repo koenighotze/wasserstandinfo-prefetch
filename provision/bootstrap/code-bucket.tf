@@ -10,18 +10,8 @@ resource "aws_s3_bucket" "code" {
 
     tags = local.common_tags
 
-    transition {
-      days          = 2
-      storage_class = "STANDARD_IA" 
-    }
-
-    transition {
-      days          = 4
-      storage_class = "GLACIER"
-    }
-
     expiration {
-      days = 10
+      days = 2
     }
   }
 
