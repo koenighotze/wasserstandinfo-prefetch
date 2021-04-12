@@ -2,7 +2,7 @@ name: Run integration test against dev-master
 
 on:
   schedule:
-    - cron:  '15 * * * *'
+    - cron:  '15 10 * * *'
   workflow_dispatch:
     inputs:
       stations_bucket_name:
