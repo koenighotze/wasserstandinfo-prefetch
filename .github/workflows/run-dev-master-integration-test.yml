@@ -16,7 +16,7 @@ on:
       lambda_function_name:
         description: 'Name of the lambda to integrate against'
         required: true
-        default: 'wasserstandinfo-prefetch-dev'
+        default: 'wasserstandinfo-prefetch-dev:$LATEST'
 
 env:
   STATIONS_BUCKET_NAME: ${{ github.event.inputs.stations_bucket_name || 'dschmitz-wasserstandinfo-stations-dev-99753' }}
