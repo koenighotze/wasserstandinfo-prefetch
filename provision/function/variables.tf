@@ -13,6 +13,10 @@ variable "app_version" {
 variable "commit_sha" {
 }
 
+variable "publish" {
+  default = false
+}
+
 locals {
   env_name = "dev" #lower(terraform.workspace)
 

@@ -10,7 +10,7 @@ resource "aws_lambda_function" "wasserstandinfo_prefetch" {
 
   role = aws_iam_role.lambda.arn
 
-  publish                        = false
+  publish                        = var.publish
   reserved_concurrent_executions = 1
   timeout                        = 3
   environment {
