@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [ master ]
+    tags: 
+      - *
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -105,11 +107,18 @@ jobs:
         working-directory: provision/function
         run: terraform init
 
+      - name: Check if tag push
+        id: tag_push_or_not
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "::set-output name=do_publish::true"
+
       - name: Plan function
         working-directory: provision/function
         run: |
           echo "Deploying ${APP_VERSION} version"
           terraform plan -input=false -no-color -out function.tfplan
+        env:
+          TF_VAR_publish: ${{ steps.tag_push_or_not.outputs.do_publish || false }}
       
       - name: Apply on master
         working-directory: provision/function

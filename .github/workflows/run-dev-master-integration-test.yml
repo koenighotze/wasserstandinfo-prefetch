@@ -1,4 +1,4 @@
-name: Run integration test against dev-master
+name: Run integration test against LATEST
 
 on:
   schedule:
