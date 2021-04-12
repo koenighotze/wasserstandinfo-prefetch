@@ -120,9 +120,9 @@ jobs:
         env:
           TF_VAR_publish: ${{ steps.tag_push_or_not.outputs.do_publish || false }}
       
-      - name: Apply on master
+      - name: Apply on master and tags
         working-directory: provision/function
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
         run: terraform apply function.tfplan
 
   slack-workflow-status:
