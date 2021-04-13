@@ -1,0 +1,45 @@
+name: Release new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      function_version:
+        description: 'The version the alias should point to'
+        required: true
+        default: '$LATEST'
+
+jobs:
+  release:
+    name: Rewire alias to version
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}         # pragma: allowlist secret
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # pragma: allowlist secret 
+      AWS_DEFAULT_REGION: eu-central-1
+      TF_VAR_function_version: ${{ github.event.inputs.function_version }}
+
+    defaults:
+      run: 
+        working-directory: provision/release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.4
+          terraform_wrapper: false
+
+      - name: Init
+        run: terraform init
+
+      - name: Plan
+        run: terraform plan -input=false -no-color -out release.tfplan
+      
+      - name: Apply
+        working-directory: provision/function
+        if: github.ref == 'refs/heads/master'
+        run: terraform apply release.tfplan
