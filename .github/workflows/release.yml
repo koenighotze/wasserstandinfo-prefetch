@@ -40,6 +40,4 @@ jobs:
         run: terraform plan -input=false -no-color -out release.tfplan
       
       - name: Apply
-        working-directory: provision/function
-        if: github.ref == 'refs/heads/master'
         run: terraform apply release.tfplan
