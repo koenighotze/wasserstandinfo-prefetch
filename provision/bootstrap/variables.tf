@@ -7,7 +7,7 @@ variable "bucket_name_prefix" {
 }
 
 locals {
-  env_name = "dev" #lower(terraform.workspace)
+  env_name = lower(terraform.workspace)
 
   common_tags = {
     Owner       = "dschmitz"
