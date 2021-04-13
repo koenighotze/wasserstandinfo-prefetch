@@ -7,6 +7,10 @@ on:
         description: 'The version the alias should point to'
         required: true
         default: '$LATEST'
+      workspace_name:
+        description: 'Terraform workspace name'
+        required: true
+        default: 'dev'
 
 jobs:
   release:
@@ -18,6 +22,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # pragma: allowlist secret 
       AWS_DEFAULT_REGION: eu-central-1
       TF_VAR_function_version: ${{ github.event.inputs.function_version }}
+      TF_WORKSPACE: ${{ github.event.inputs.workspace_name || 'dev' }}
 
     defaults:
       run: 

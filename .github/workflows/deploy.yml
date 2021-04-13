@@ -2,6 +2,11 @@ name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      workspace_name:
+        description: 'Terraform workspace name'
+        required: true
+        default: 'dev'
   workflow_run:
     workflows:
       - Build
@@ -23,6 +28,7 @@ jobs:
       APP_VERSION: ${{ github.ref }}
       TF_VAR_app_version: ${{ github.ref }}
       TF_VAR_commit_sha: ${{ github.sha }}
+      TF_WORKSPACE: ${{ github.event.inputs.workspace_name || 'dev' }}
 
     steps:
       - name: Checkout
