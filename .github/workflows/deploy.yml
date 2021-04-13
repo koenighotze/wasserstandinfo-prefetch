@@ -1,11 +1,10 @@
-name: CD
+name: Deploy
 
 on:
   workflow_dispatch:
   workflow_run:
     workflows:
-      - CI 
-      - Security scan
+      - Build
     branches: 
       - master
     types:
@@ -53,9 +52,7 @@ jobs:
 
       - name: Plan function
         working-directory: provision/function
-        run: |
-          echo "Deploying ${APP_VERSION} version"
-          terraform plan -input=false -no-color -out function.tfplan
+        run: terraform plan -input=false -no-color -out function.tfplan
         env:
           TF_VAR_publish: ${{ steps.tag_push_or_not.outputs.do_publish || false }}
       
