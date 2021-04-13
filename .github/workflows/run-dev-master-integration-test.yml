@@ -16,12 +16,13 @@ on:
       lambda_function_name:
         description: 'Name of the lambda to integrate against'
         required: true
-        default: 'wasserstandinfo-prefetch-dev:$LATEST'
+        default: 'wasserstandinfo-prefetch-dev:dev'
 
 env:
+  # todo fetch these names from terraform state
   STATIONS_BUCKET_NAME: ${{ github.event.inputs.stations_bucket_name || 'dschmitz-wasserstandinfo-stations-dev-99753' }}
   STATIONS_OBJECT_KEY_NAME: ${{ github.event.inputs.stations_object_key_name || 'stations.json' }}
-  LAMBDA_FUNCTION_NAME: ${{ github.event.inputs.lambda_function_name || 'wasserstandinfo-prefetch-dev' }}
+  LAMBDA_FUNCTION_NAME: ${{ github.event.inputs.lambda_function_name || 'wasserstandinfo-prefetch-dev:dev' }}
 
 jobs:
   run-integration-test:
