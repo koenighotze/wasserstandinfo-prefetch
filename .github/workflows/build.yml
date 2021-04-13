@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on: [ push, workflow_dispatch ]
 
@@ -64,3 +64,31 @@ jobs:
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
+
+  security-scan:
+    name: Scan code for security flaws
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Detect secrets
+      uses: reviewdog/action-detect-secrets@master
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review
+        detect_secrets_flags: "--exclude-files package-lock.json --exclude-lines '.*{{ secrets.AWS.*'"
+        fail_on_error: true
+
+    - name: Scan for vulnerabilities with Snyk
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Scan Terraform for vulnerabilities
+      uses: reviewdog/action-tfsec@v1.6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        fail_on_error: true
+
