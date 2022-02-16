@@ -44,15 +44,17 @@ jobs:
       run:  ./node_modules/.bin/jest --verbose -c jest.config.integration-test.js
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # pragma: allowlist secret
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret 
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # pragma: allowlist secret
         AWS_DEFAULT_REGION: eu-central-1
 
     - name: Slack Workflow Notification
-      uses: Gamesight/slack-workflow-status@v1.0.1
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
-        channel: '#github'
-        name: ${{ github.workflow }}
-        icon_emoji: ':poop:'
-      
+      uses: rtCamp/action-slack-notify@v2@v2.2.0
+      env:
+        SLACK_CHANNEL: '#github'
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_TITLE: ${{ github.workflow }}
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+

@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const STATIONS_BUCKET_NAME = process.env.STATIONS_BUCKET_NAME
+const UPLOAD_BUCKET_NAME = process.env.UPLOAD_BUCKET_NAME
 const STATIONS_OBJECT_KEY_NAME = process.env.STATIONS_OBJECT_KEY_NAME
 const LAMBDA_FUNCTION_NAME = process.env.LAMBDA_FUNCTION_NAME
 const region = 'eu-central-1'
@@ -9,8 +9,9 @@ const { Lambda, InvokeCommand } = require('@aws-sdk/client-lambda')
 const { S3Client, DeleteObjectCommand, HeadBucketCommand, HeadObjectCommand } = require('@aws-sdk/client-s3')
 const logger = require('bunyan').createLogger({ name: __filename })
 
+console.log(process.env)
 describe('End to end', () => {
-    const bucketParams = { Bucket: STATIONS_BUCKET_NAME }
+    const bucketParams = { Bucket: UPLOAD_BUCKET_NAME }
     const objectParams = { ...bucketParams, Key: STATIONS_OBJECT_KEY_NAME }
 
     let s3Client, lambdaClient
@@ -20,7 +21,7 @@ describe('End to end', () => {
     const stationsFileExists = () => s3Client.send(new HeadObjectCommand(objectParams)).catch(() => false)
 
     const deleteStationsFile = () => s3Client.send(new DeleteObjectCommand(objectParams))
-    
+
     const invokeFetchStationsLambda = async () => {
         logger.info(`Invoking function ${LAMBDA_FUNCTION_NAME}`)
         await lambdaClient.send(new InvokeCommand({
@@ -30,7 +31,7 @@ describe('End to end', () => {
 
     const cleanUpIfNeeded = async () => {
         await assertBucketExists(s3Client)
-        logger.info(`Bucket ${STATIONS_BUCKET_NAME} exists`)
+        logger.info(`Bucket ${UPLOAD_BUCKET_NAME} exists`)
 
         if (await stationsFileExists(s3Client)) {
             logger.info('Stations file exists, deleting it')
@@ -48,12 +49,12 @@ describe('End to end', () => {
     afterEach(() => cleanUpIfNeeded())
 
     it('should load the station data into the bucket', async () => {
-        logger.info(`Check that stations file ${STATIONS_OBJECT_KEY_NAME} does not exist in bucket ${STATIONS_BUCKET_NAME}`)
+        logger.info(`Check that stations file ${STATIONS_OBJECT_KEY_NAME} does not exist in bucket ${UPLOAD_BUCKET_NAME}`)
         await expect(stationsFileExists()).resolves.toBeFalsy()
-        
+
         await invokeFetchStationsLambda()
 
-        logger.info(`Verify that stations file ${STATIONS_OBJECT_KEY_NAME} exists in bucket ${STATIONS_BUCKET_NAME}`)
+        logger.info(`Verify that stations file ${STATIONS_OBJECT_KEY_NAME} exists in bucket ${UPLOAD_BUCKET_NAME}`)
         await expect(stationsFileExists()).resolves.toBeTruthy()
     })
 })

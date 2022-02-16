@@ -12,5 +12,5 @@ locals {
   common_tags = {
     Owner       = "dschmitz"
     Environment = local.env_name
-  }  
+  }
 }

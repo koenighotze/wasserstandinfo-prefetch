@@ -1,8 +1,9 @@
 const logger = require('bunyan').createLogger({ name: __filename })
 const PegelOnline = require('./pegel-online')
 const StationData = require('./station-data')
+const { uploadBucketName, stationsObjectKeyName } = require('./config')
 
-const fetchCurrentWasserstand = async (uploadBucketName, stationsObjectKeyName) => {
+const fetchCurrentWasserstand = async () => {
     logger.info('Updating local station data')
     const stations = await PegelOnline.fetchStations()
 

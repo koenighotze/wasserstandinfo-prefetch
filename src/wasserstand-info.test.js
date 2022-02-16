@@ -1,11 +1,17 @@
+const { v4: uuid } = require('uuid')
 describe('the wasserstand info', () => {
+    const mockUploadBucketName = uuid()
+    const mockStationsObjectKeyName = uuid()
     let fetchCurrentWasserstand, mockFetchStations, mockStoreStationData, mockParseStationData
 
     beforeEach(() => {
         mockFetchStations = jest.fn()
         mockStoreStationData = jest.fn()
         mockParseStationData = jest.fn()
-
+        jest.mock('./config', () => ({
+            uploadBucketName: mockUploadBucketName,
+            stationsObjectKeyName: mockStationsObjectKeyName
+        }))
         jest.mock('./pegel-online', () => ({
             fetchStations: mockFetchStations
         }))
@@ -18,7 +24,7 @@ describe('the wasserstand info', () => {
     })
 
     it('should fetch the stations', async () => {
-        await fetchCurrentWasserstand('testbucketname')
+        await fetchCurrentWasserstand()
 
         expect(mockFetchStations).toHaveBeenCalled()
     })
@@ -29,10 +35,10 @@ describe('the wasserstand info', () => {
         mockFetchStations.mockResolvedValue(raw)
         mockParseStationData.mockReturnValue(parsed)
 
-        await fetchCurrentWasserstand('testbucketname', 'stations.json')
+        await fetchCurrentWasserstand()
 
         expect(mockParseStationData).toHaveBeenCalled()
-        expect(mockStoreStationData).toHaveBeenCalledWith(parsed, 'testbucketname', 'stations.json')
+        expect(mockStoreStationData).toHaveBeenCalledWith(parsed, mockUploadBucketName, mockStationsObjectKeyName)
     })
 
     describe('and fetching the stations fails', () => {
