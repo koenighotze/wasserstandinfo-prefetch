@@ -16,9 +16,9 @@ The following diagram show the link between the different parts of the Wassersta
 
 ```mermaid
   graph TD;
-      AWS-Lambda --> Wasserstandinfo-Prefetch;
-      Wasserstandinfo-Prefetch --> S3-Bucket;
-      S3-Bucket --> Alexa-Wasserstandinfo-Skill;
+      AWSLambda --> WasserstandinfoPrefetch;
+      WasserstandinfoPrefetch --> S3Bucket;
+      S3Bucket --> AlexaWasserstandinfoSkill;
 ```
 
 ```mermaid
@@ -34,6 +34,20 @@ The following diagram show the link between the different parts of the Wassersta
     Weather-station-->>Wasserstandinfo-Prefetch: station.json
     Wasserstandinfo-Prefetch->>S3-Bucket: Upload station data
     Alexa-Wasserstandinfo-Skill->>S3-Bucket: Uses station data
+```
+
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!
 ```
 
 ## Getting started
