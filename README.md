@@ -21,6 +21,21 @@ The following diagram show the link between the different parts of the Wassersta
       S3-Bucket --> Alexa-Wasserstandinfo-Skill;
 ```
 
+```mermaid
+  sequenceDiagram
+    participant AWS-Lambda
+    participant Wasserstandinfo-Prefetch
+    participant Weather-station
+    participant S3-Bucket
+    participant Alexa-Wasserstandinfo-Skill
+
+    AWS-Lambda->>Wasserstandinfo-Prefetch: Triggers per schedule
+    Wasserstandinfo-Prefetch->>Weather-station: fetch station data
+    Weather-station-->>Wasserstandinfo-Prefetch: station.json
+    Wasserstandinfo-Prefetch->>S3-Bucket: Upload station data
+    Alexa-Wasserstandinfo-Skill->>S3-Bucket: Uses station data
+```
+
 ## Getting started
 
 *   Run ./provision/bootstrap (only needed once)
@@ -49,5 +64,15 @@ $ aws lambda get-function --function-name wasserstandinfo-prefetch-dev | jq '.Co
 After you have set the environment variables, run the integration tests
 
 ```bash
+$ npm run test.integration
+...
+PASS integration-tests/end-to-end.test.js
+  End to end
+    ✓ should load the station data into the bucket (3364 ms)
 
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        4.251 s, estimated 5 s
+Ran all test suites.
 ```
