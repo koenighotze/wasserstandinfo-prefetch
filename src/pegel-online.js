@@ -5,9 +5,7 @@ const { stationsServiceUrl } = require('./config')
 const fetchStations = async () => {
   logger.debug('Fetching stations from ' + stationsServiceUrl)
 
-  const { data } = await axios.get(stationsServiceUrl, { timeout: 2000 })
-
-  return data
+  return (await axios.get(stationsServiceUrl, { timeout: 2000 })).data
 }
 
 module.exports = {

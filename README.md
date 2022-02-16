@@ -8,6 +8,7 @@
 
 ## Overview
 
+TODO
 
 ## Architecture
 
@@ -31,9 +32,9 @@ The following diagram show the link between the different parts of the Wassersta
 
 You need to set the following environment variables:
 
-*  STATIONS_BUCKET_NAME: the name of the bucket
-*  STATIONS_OBJECT_KEY_NAME: the name of the object containing the station data
-*  LAMBDA_FUNCTION_NAME: the name of the lamba
+*   STATIONS_BUCKET_NAME: the name of the bucket
+*   STATIONS_OBJECT_KEY_NAME: the name of the object containing the station data
+*   LAMBDA_FUNCTION_NAME: the name of the lamba
 
 The values must match the lambda under test. Suppose the lambda is called `wasserstandinfo-prefetch-dev`, you can check the other values with a command like the following:
 
