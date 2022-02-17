@@ -15,13 +15,6 @@ TODO
 The following diagram show the link between the different parts of the Wasserstand-prefetch
 
 ```mermaid
-  graph TD;
-      AWSLambda --> WasserstandinfoPrefetch;
-      WasserstandinfoPrefetch --> S3Bucket;
-      S3Bucket --> AlexaWasserstandinfoSkill;
-```
-
-```mermaid
   sequenceDiagram
     participant AWSLambda
     participant WasserstandinfoPrefetch
