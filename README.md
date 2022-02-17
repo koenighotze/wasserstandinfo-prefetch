@@ -23,17 +23,17 @@ The following diagram show the link between the different parts of the Wassersta
 
 ```mermaid
   sequenceDiagram
-    participant AWS-Lambda
-    participant Wasserstandinfo-Prefetch
-    participant Weather-station
-    participant S3-Bucket
-    participant Alexa-Wasserstandinfo-Skill
+    participant AWSLambda
+    participant WasserstandinfoPrefetch
+    participant WeatherStation
+    participant S3Bucket
+    participant AlexaWasserstandinfoSkill
 
-    AWS-Lambda->>Wasserstandinfo-Prefetch: Triggers per schedule
-    Wasserstandinfo-Prefetch->>Weather-station: fetch station data
-    Weather-station-->>Wasserstandinfo-Prefetch: station.json
-    Wasserstandinfo-Prefetch->>S3-Bucket: Upload station data
-    Alexa-Wasserstandinfo-Skill->>S3-Bucket: Uses station data
+    AWSLambda->>Wasserstandinfo-Prefetch: Triggers per schedule
+    WasserstandinfoPrefetch->>WeatherStation: fetch station data
+    WeatherStation-->>WasserstandinfoPrefetch: station.json
+    WasserstandinfoPrefetch->>S3Bucket: Upload station data
+    AlexaWasserstandinfoSkill->>S3Bucket: Uses station data
 ```
 
 ```mermaid
