@@ -29,25 +29,11 @@ The following diagram show the link between the different parts of the Wassersta
     participant S3Bucket
     participant AlexaWasserstandinfoSkill
 
-    AWSLambda->>Wasserstandinfo-Prefetch: Triggers per schedule
+    AWSLambda->>WasserstandinfoPrefetch: Triggers per schedule
     WasserstandinfoPrefetch->>WeatherStation: fetch station data
     WeatherStation-->>WasserstandinfoPrefetch: station.json
     WasserstandinfoPrefetch->>S3Bucket: Upload station data
     AlexaWasserstandinfoSkill->>S3Bucket: Uses station data
-```
-
-```mermaid
-sequenceDiagram
-    participant Alice
-    participant Bob
-    Alice->>John: Hello John, how are you?
-    loop Healthcheck
-        John->>John: Fight against hypochondria
-    end
-    Note right of John: Rational thoughts <br/>prevail!
-    John-->>Alice: Great!
-    John->>Bob: How about you?
-    Bob-->>John: Jolly good!
 ```
 
 ## Getting started
