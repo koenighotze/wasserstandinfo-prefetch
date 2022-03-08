@@ -86,7 +86,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Scan Terraform for vulnerabilities
-      uses: reviewdog/action-tfsec@v1.6.1
+      uses: reviewdog/action-tfsec@v1.14.2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: github-pr-review
